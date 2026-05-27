@@ -1,0 +1,6 @@
+qiskit
+qiskit-aer
+python-telegram-bot
+nest-asyncio
+pyjwt
+python-dotenv
