@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schrödinger Hash | Zero-Knowledge Login</title>
+    <style>
+        :root {
+            --neon-lime: #00ff66;
+            --dark-bg: #0d1117;
+            --panel-bg: #161b22;
+            --text-main: #c9d1d9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 255, 102, 0.05) 0%, transparent 60%);
+        }
+        .login-container {
+            background: var(--panel-bg);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.1);
+            text-align: center;
+        }
+        .logo { font-size: 2.5em; color: var(--neon-lime); margin-bottom: 10px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
+        h1 { font-size: 1.5em; margin-bottom: 5px; color: #fff; }
+        p.subtitle { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; }
+        
+        #dashboard { display: none; text-align: left; }
+        .hash-panel { background: #010409; border-left: 3px solid var(--neon-lime); padding: 15px; margin: 20px 0; font-size: 0.85em; border-radius: 4px; }
+        .hash-panel span { color: var(--neon-lime); font-weight: bold; letter-spacing: 1px; }
+        .data-row { margin-bottom: 10px; }
+        
+        .btn-verify {
+            background: transparent; color: var(--neon-lime); border: 1px solid var(--neon-lime);
+            padding: 12px 20px; width: 100%; border-radius: 6px; font-family: inherit;
+            font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 10px;
+        }
+        .btn-verify:hover { background: var(--neon-lime); color: var(--dark-bg); box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
+        .footer-credit { margin-top: 30px; font-size: 0.75em; color: #484f58; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">⚛️</div>
+        <h1>Schrödinger Hash</h1>
+        <p class="subtitle">Passwordless Quantum-Entangled Auth</p>
+
+        <div id="login-section">
+            <p style="margin-bottom: 15px; font-size: 0.85em;">Sila log masuk untuk menjana entropi sesi:</p>
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-login="Hadamard_bot" 
+                    data-size="large" 
+                    data-onauth="onTelegramAuth(user)" 
+                    data-request-access="write">
+            </script>
+        </div>
+
+        <div id="dashboard">
+            <h2 style="color: #fff; font-size: 1.2em; text-align: center;">Akses Diberikan</h2>
+            <p style="text-align: center; color: #8b949e; margin-top: 5px;">Selamat datang, <strong id="userName" style="color: #fff;"></strong></p>
+
+            <div class="hash-panel">
+                <div class="data-row">⏳ Blok Masa:<br><span id="displayTime"></span></div>
+                <div class="data-row">⚛️ Quantum Nonce:<br><span id="displayNonce"></span></div>
+                <div class="data-row">🔐 Hash Sesi:<br><span id="displayHash"></span></div>
+            </div>
+
+            <p style="font-size: 0.8em; color: #8b949e; text-align: center; margin-bottom: 15px;">
+                Sahkan state kuantum di Telegram untuk membuka arkib rahsia.
+            </p>
+
+            <button class="btn-verify" onclick="verifySession()">Sahkan Sesi / 2FA</button>
+            <button onclick="logout()" style="background: none; border: none; color: #ff4444; width: 100%; margin-top: 15px; cursor: pointer; font-family: inherit; font-size: 0.85em;">Batal Sesi</button>
+        </div>
+
+        <div class="footer-credit">
+            // Core Logic Engine by Encik Johan<br>
+            Protected by Dual-Bridge Entropy
+        </div>
+    </div>
+
+    <script>
+        let sessionData = {};
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);                    
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function generateSchrodingerState(seedHex, challenge) {
+            const entropy = await sha256(seedHex + challenge);
+            let qNonce = "";
+            for (let i = 0; i < 4; i++) {
+                let code = entropy.charCodeAt(i);
+                let control = (code % 2 === 0) ? "0" : "1";
+                qNonce += control + control; 
+            }
+            const combined = seedHex + challenge + qNonce;
+            const fullHash = await sha256(combined);
+            return {
+                nonce: qNonce,
+                hash: fullHash.slice(0, 8).toUpperCase()
+            };
+        }
+
+        async function onTelegramAuth(user) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('userName').innerText = '@' + (user.username || user.first_name);
+
+            const seed = await sha256(user.id.toString());
+            const timeWindow = Math.floor(Date.now() / 30000).toString();
+
+            const result = await generateSchrodingerState(seed, timeWindow);
+
+            sessionData = {
+                hash: result.hash,
+                nonce: result.nonce,
+                botUsername: 'Hadamard_bot' // GANTIKAN DENGAN USERNAME BOT ANDA
+            };
+
+            document.getElementById('displayTime').innerText = timeWindow;
+            document.getElementById('displayNonce').innerText = result.nonce;
+            document.getElementById('displayHash').innerText = result.hash;
+        }
+
+        function verifySession() {
+            if (!sessionData.hash) return alert("Ralat Sesi. Sila log masuk semula.");
+            
+            // Buka bot Telegram di tab baru
+            const botUrl = `https://t.me/${sessionData.botUsername}?start=${sessionData.hash}`;
+            window.open(botUrl, '_blank');
+            
+            // Halakan pengguna ke halaman kucing-kuantum.html selepas 3 saat
+            setTimeout(() => {
+                window.location.href = 'kucing-kuantum.html';
+            }, 3000);
+        }
+
+        function logout() {
+            sessionData = {};
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
