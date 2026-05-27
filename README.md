@@ -1,1 +1,1 @@
-# ​Schrödinger's cat
+# ​Schrödinger's hash
