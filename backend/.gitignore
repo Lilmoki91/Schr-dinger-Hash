@@ -1,0 +1,19 @@
+# Fail Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fail sensitif
+.env
+*.token
+*.key
+
+# Fail persekitaran
+venv/
+env/
+.venv/
+
+# Fail sistem
+.DS_Store
+.vscode/
+.idea/
