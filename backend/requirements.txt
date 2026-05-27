@@ -1,7 +1,6 @@
-qiskit
-qiskit-aer
-python-telegram-bot
-nest-asyncio
-pyjwt
-python-dotenv
-flask
+flask==3.0.0
+python-dotenv==1.0.0
+python-telegram-bot==20.8
+nest-asyncio==1.6.0
+qiskit==1.0.0
+qiskit-aer==0.13.3
