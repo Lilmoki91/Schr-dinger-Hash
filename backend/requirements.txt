@@ -1,6 +1,6 @@
-flask==3.0.0
-python-dotenv==1.0.0
-python-telegram-bot==20.8
-nest-asyncio==1.6.0
-qiskit==1.0.0
-qiskit-aer==0.13.3 --only-binary :all:
+    
+python-telegram-bot>=20.0
+python-dotenv>=1.0.0
+cirq>=1.2.0
+numpy>=1.24.0
+    
