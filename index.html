@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Quantum Portal</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: #050914; color: #00ffcc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 0 20px rgba(0, 255, 204, 0.1); }
+        h1 { font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
+        .btn { display: inline-block; width: 100%; padding: 12px; background: #00ffcc; color: #050914; font-weight: bold; text-decoration: none; margin-bottom: 15px; cursor: pointer; border: none; }
+        .console { background: #000; color: #0f0; padding: 15px; font-size: 12px; text-align: left; height: 200px; overflow-y: auto; border: 1px solid #333; display: none; margin-top: 15px; }
+        .error { color: #ff3333; } .success { color: #00ffcc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Quantum Identity Gate</h1>
+    
+    <div id="init-section">
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Litar Entanglement Cirq 8-Qubit</p>
+        <a href="https://t.me/NAMA_BOT_ANDA" target="_blank" class="btn">Jana State Vector (Telegram)</a>
+    </div>
+
+    <div id="verify-section" style="display: none;">
+        <p id="status-text">Menyelaras Fungsi Gelombang...</p>
+        <div class="console" id="console-log"></div>
+    </div>
+</div>
+
+<script>
+    // Fungsi untuk log ke konsol UI
+    function logConsole(msg, className = '') {
+        const box = document.getElementById('console-log');
+        const line = document.createElement('div');
+        line.className = className;
+        line.innerText = `> ${msg}`;
+        box.appendChild(line);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    // Algoritma Pengiraan Signature (Mesti selari dengan Python backend)
+    async function calculateQuantumSignature(userIdStr, seedHex) {
+        let stateList = new Array(256).fill(0);
+        let bits = new Array(8).fill(0);
+        
+        for(let i=0; i<6; i++) {
+            bits[i] = parseInt(seedHex.substr(i*2, 2), 16) % 2;
+        }
+        
+        let uid = BigInt(userIdStr);
+        bits[6] = (Number(uid % 256n) > 128) ? 1 : 0;
+        bits[7] = (Number((uid >> 8n) % 256n) > 128) ? 1 : 0;
+        
+        for(let i=0; i<6; i++) {
+            if (bits[6] === 1) bits[i] = bits[i] ^ 1; 
+        }
+        
+        let finalIndex = (bits[0] << 7) | (bits[1] << 6) | (bits[2] << 5) | 
+                         (bits[3] << 4) | (bits[4] << 3) | (bits[5] << 2) | 
+                         (bits[6] << 1) | bits[7];
+                         
+        stateList[finalIndex] = 1;
+        
+        let stateStr = JSON.stringify(stateList);
+        const dataBuffer = new TextEncoder().encode(stateStr);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+        
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Fungsi Utama: Pemeriksa Gerbang Kuantum
+    window.onload = async () => {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('user_id');
+        const seedHex = params.get('seed_hex');
+        const remoteHash = params.get('quantum_hash');
+        
+        if (userId && seedHex && remoteHash) {
+            document.getElementById('init-section').style.display = 'none';
+            document.getElementById('verify-section').style.display = 'block';
+            document.getElementById('console-log').style.display = 'block';
+            
+            logConsole(`Data masuk dari ID: ${userId}`);
+            logConsole("Membina padanan litar Big-Endian Cirq di klien...");
+
+            const localHash = await calculateQuantumSignature(userId, seedHex);
+            
+            logConsole(`Cirq (Python) Hash: ${remoteHash.substring(0, 16)}...`);
+            logConsole(`Local (JS) Hash:    ${localHash.substring(0, 16)}...`);
+
+            setTimeout(async () => {
+                if (localHash === remoteHash) {
+                    logConsole("PADANAN STATE VECTOR BERJAYA.", "success");
+                    document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
+                    document.getElementById('status-text').className = "success";
+                    
+                    // PROSES PENGHANTARAN DATA KE LAMAN ARKIB
+                    // Kita sertakan data yang sama ke laman seterusnya
+                    const redirectUrl = `kucing-kuantum.html?user_id=${userId}&quantum_hash=${remoteHash}`;
+                    
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1500);
+                    
+                } else {
+                    logConsole("RALAT KETAKSELARASAN LITAR!", "error");
+                    document.getElementById('status-text').innerText = "Akses Ditolak (Klon).";
+                    document.getElementById('status-text').className = "error";
+                }
+            }, 1000);
+        }
+    };
+</script>
+</body>
+</html>
