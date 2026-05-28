@@ -23,15 +23,23 @@
         .footer { margin-top: 40px; text-align: center; font-size: 0.8em; color: #484f58; }
         .typewriter { overflow: hidden; white-space: nowrap; margin: 0 auto; letter-spacing: .1em; animation: typing 3.5s steps(40, end); }
         @keyframes typing { from { width: 0 } to { width: 100% } }
+
+.container { max-width: 800px; margin: 0 auto; background: var(--panel-bg); border: 1px solid #1f293d; padding: 40px; border-radius: 12px; }
+
+/* Dashboard Telemetri */
+        .telemetry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #30363d; padding-bottom: 20px; font-size: 0.8em; }
+        .tele-val { color: var(--neon-lime); font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div style="text-align: right; margin-bottom: 20px; font-size: 0.8em; color: var(--neon-lime);">
-            [STATUS: TERENKRIPSI] <br>
-            ID SESI: <span id="session-id">MENGESAHKAN...</span>
-        </div>
+    <div class="telemetry-grid">
+        <div>ID PENGGUNA: <span id="uid" class="tele-val">---</span></div>
+        <div>MASA RUNTUHAN: <span id="time" class="tele-val">---</span></div>
+        <div>STATE 8-QUBIT: <span id="qubits" class="tele-val">---</span></div>
+        <div>QUANTUM HASH: <span id="hash" class="tele-val">---</span></div>
+    </div>
 
         <h1>Lagenda Kucing Kuantum</h1>
         <div class="subtitle typewriter">Eksperimen Minda Erwin Schrödinger (1935)</div>
@@ -62,15 +70,24 @@
         <div class="footer">
             // Sistem Penceritaan Web3 & Identiti Kuantum <br>
             // Dibangunkan oleh Encik Johan<br>
-            // Lokasi Pelayan Utama: Zon Waktu +08:00
+            
         </div>
     </div>
 
     <script>
-        window.onload = function() {
-            const randomHex = Math.floor(Math.random()*16777215).toString(16).toUpperCase();
-            document.getElementById('session-id').innerText = "0x" + randomHex + " (SAH)";
-        }
-    </script>
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('uid').innerText = params.get('user_id') || "NULL";
+        const hash = params.get('quantum_hash') || "00000000";
+        document.getElementById('hash').innerText = hash.substring(0, 16) + "...";
+        document.getElementById('time').innerText = new Date().toLocaleTimeString();
+        
+        // Visualisasi 8-Qubit State
+        const qState = hash.substring(0, 8).split('').map(c => 
+            (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
+        ).join(' ');
+        document.getElementById('qubits').innerText = qState;
+    }
+</script>
 </body>
 </html>
