@@ -1,3 +1,12 @@
+```
+{"   
+      /\_/\
+     ( o.o )
+      > ^ <
+      🆔⚛️✨
+"}
+```,
+
 # Schrödinger Hash – Sistem Login Simulator Quantum Entanglement  
 **Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
 
