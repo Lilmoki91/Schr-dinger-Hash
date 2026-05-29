@@ -1,4 +1,4 @@
-# Schrödinger Hash – Sistem Login Quantum Entanglement  
+# Schrödinger Hash – Sistem Login Simulator Quantum Entanglement  
 **Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
 
 **“Akses diberi bukan oleh manusia, tapi oleh hukum murni fizik matematik Quantum Entanglement sejati.”**
