@@ -62,7 +62,8 @@
 
         <div class="story-section" style="border-top: 1px solid #1f293d; padding-top: 20px; margin-top: 30px;">
             <h2>Hubungan Dengan Schrödinger Hash</h2>
-            <p>Identiti dan akses anda berada dalam keadaan kebarangkalian (*probability cloud*). Apabila anda menekan butang untuk menjana <span class="highlight">Quantum Nonce</span>, anda sebenarnya memasukkan data ke dalam 'kotak keluli'. Apabila Bot Telegram menyemak dan memadankan Hash tersebut, Bot bertindak sebagai 'Pemerhati' yang meruntuhkan gelombang superposisi menjadi sebuah kenyataan: <span class="highlight">Akses Dibenarkan</span>.</p>
+            <p>Kisah ini bukan tentang haiwan, tetapi tentang pemerhatian. Apabila anda membuka kotak (melihat <span class="highlight">Hash Kuantum</span> ini), anda telah memaksa alam semesta untuk memilih satu realiti. Anda adalah pemerhati yang meruntuhkan fungsi gelombang tersebut.</p><p>Identiti dan akses anda berada dalam keadaan kebarangkalian <span class="highlight">(*probability cloud*).</span> Apabila anda menekan butang untuk menjana <span class="highlight">State Vector</span>, anda sebenarnya memasukkan data ke dalam 'kotak keluli'. Apabila Bot Telegram mencetak Quntum Hash bell state, webapps akan  bertindak sebagai 'Entangle' memadankan Quntum hash bell state Bot Telegram, <span class="alert">Jika data adalah dari sumber yang sama maka kesepakatan Entanglement dicapai oleh padanan serasi kedua-dua Quantum hash bell state. maka akses login dibenarkan oleh hukum murni fizik matematik Quantum Entanglement sejati: 
+("Akses Dibenarkan!")</span></p>
         </div>
 
         <button class="logout-btn" onclick="window.location.href='index.html'">TUTUP KOTAK (LOG KELUAR)</button>
@@ -77,23 +78,53 @@
 
     <script>
     window.onload = function() {
+        // 1. Ambil parameter 'token' yang terenkripsi dari URL
         const params = new URLSearchParams(window.location.search);
-        document.getElementById('uid').innerText = params.get('user_id') || "NULL";
-        const hash = params.get('quantum_hash') || "00000000";
-        document.getElementById('hash').innerText = hash.substring(0, 16) + "...";
-        document.getElementById('time').innerText = new Date().toLocaleTimeString();
+        const token = params.get('token');
         
-        // Visualisasi 8-Qubit State
-        const qState = hash.substring(0, 8).split('').map(c => 
-            (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
-        ).join(' ');
-        document.getElementById('qubits').innerText = qState;
+        if (token) {
+            try {
+                // 2. Nyahsulit token Base64 ke bentuk asal (JSON string)
+                const decodedStr = atob(token);
+                const data = JSON.parse(decodedStr);
+                
+                // 3. Ekstrak data dari objek token (u = user_id, h = quantum_hash)
+                const userId = data.u || "NULL";
+                const hash = data.h || "0000000000000000";
+                
+                // 4. Paparkan data pada paparan Telemetri
+                document.getElementById('uid').innerText = userId;
+                document.getElementById('hash').innerText = hash.substring(0, 16) + "...";
+                document.getElementById('time').innerText = new Date().toLocaleTimeString();
+                
+                // 5. Visualisasi 8-Qubit State berdasarkan nilai hash baharu
+                const qState = hash.substring(0, 8).split('').map(c => 
+                    (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
+                ).join(' ');
+                document.getElementById('qubits').innerText = qState;
+
+            } catch (error) {
+                // Jika token diubah suai atau rosak
+                console.error("Gagal mendekrip token:", error);
+                document.getElementById('uid').innerText = "RALAT TOKEN";
+                document.getElementById('hash').innerText = "STRUKTUR ROSAK";
+                document.getElementById('qubits').innerText = "UNSTABLE STATE";
+            }
+        } else {
+            // Jika pengguna cuba masuk terus tanpa melalui index.html (tiada token)
+            document.getElementById('uid').innerText = "TIADA TOKEN (DISEKAT)";
+            document.getElementById('hash').innerText = "SILA LALUI GERBANG UTAMA";
+            document.getElementById('qubits').innerText = "|?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩";
+        }
+
+        // Jalankan jam pelayan di footer secara masa nyata (Real-time)
+        updateServerTime();
+        setInterval(updateServerTime, 1000);
     }
     
-
+    // Fungsi untuk mengemas kini Jam di bahagian Footer (+08:00)
     function updateServerTime() {
         const now = new Date();
-        // Menetapkan zon waktu Malaysia (UTC+8)
         const options = { 
             timeZone: 'Asia/Kuala_Lumpur', 
             hour12: false, 
@@ -102,14 +133,13 @@
             second: '2-digit' 
         };
         const timeString = new Intl.DateTimeFormat('ms-MY', options).format(now);
-        document.getElementById('server-time').innerText = timeString;
+        
+        const serverTimeEl = document.getElementById('server-time');
+        if (serverTimeEl) {
+            serverTimeEl.innerText = timeString;
+        }
     }
 
-    // Jalankan sekali semasa muat turun, kemudian kemas kini setiap saat
-    updateServerTime();
-    setInterval(updateServerTime, 1000);
-
-    
 </script>
 </body>
 </html>
