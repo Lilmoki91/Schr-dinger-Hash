@@ -1,6 +1,5 @@
-    
-python-telegram-bot>=20.0
-python-dotenv>=1.0.0
-cirq>=1.2.0
-numpy>=1.24.0
-    
+python-telegram-bot>=21.0
+python-dotenv>=1.0.1
+cirq-core>=1.4.0
+numpy>=1.26.0
+cryptography>=42.0.0
