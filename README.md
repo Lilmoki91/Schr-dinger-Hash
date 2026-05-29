@@ -46,7 +46,7 @@ Tujuan asal:
 
 ---
 
-## 🖼️ Cara-cara akses sistem pengesahan ID litar simulator kuantum entanglement sejati pustaka CIRQ Dewan Bahasa Python + JavaScript Murni
+## 🖼️ Cara-cara akses sistem pengesahan ID litar simulator kuantum entanglement sejati pustaka CIRQ Dewan Bahasa Komputer Python + JavaScript Murni
 
 ### 1️⃣ Login – Jana State Vector  
 *Klik "Jana State Vector (Telegram)" di laman utama untuk memulakan proses.*
