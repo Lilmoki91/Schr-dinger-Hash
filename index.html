@@ -21,7 +21,7 @@
     
     <div id="init-section">
         <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Litar Entanglement Cirq 8-Qubit</p>
-        <a href="https://t.me/NAMA_BOT_ANDA" target="_blank" class="btn">Jana State Vector (Telegram)</a>
+        <a href="https://t.me/kipidaps_bot" target="_blank" class="btn">Jana State Vector (Telegram)</a>
     </div>
 
     <div id="verify-section" style="display: none;">
@@ -31,7 +31,6 @@
 </div>
 
 <script>
-    // Fungsi untuk log ke konsol UI
     function logConsole(msg, className = '') {
         const box = document.getElementById('console-log');
         const line = document.createElement('div');
@@ -41,29 +40,36 @@
         box.scrollTop = box.scrollHeight;
     }
 
-    // Algoritma Pengiraan Signature (Mesti selari dengan Python backend)
     async function calculateQuantumSignature(userIdStr, seedHex) {
+        // 1. Bina array 256 elemen (meniru format result.final_state_vector Cirq)
         let stateList = new Array(256).fill(0);
         let bits = new Array(8).fill(0);
         
+        // 2. Set bits Qubit Rawak (0 hingga 5)
         for(let i=0; i<6; i++) {
             bits[i] = parseInt(seedHex.substr(i*2, 2), 16) % 2;
         }
         
+        // 3. Set bits Qubit Statik Anchor (6 dan 7)
         let uid = BigInt(userIdStr);
         bits[6] = (Number(uid % 256n) > 128) ? 1 : 0;
         bits[7] = (Number((uid >> 8n) % 256n) > 128) ? 1 : 0;
         
+        // 4. Litar Entanglement CNOT (Control: Qubit 6, Target: Qubit 0-5)
         for(let i=0; i<6; i++) {
-            if (bits[6] === 1) bits[i] = bits[i] ^ 1; 
+            if (bits[6] === 1) {
+                bits[i] = bits[i] ^ 1; 
+            }
         }
         
+        // 5. Penyelarasan Susunan Big-Endian Cirq (MSB di Qubit 0)
         let finalIndex = (bits[0] << 7) | (bits[1] << 6) | (bits[2] << 5) | 
                          (bits[3] << 4) | (bits[4] << 3) | (bits[5] << 2) | 
                          (bits[6] << 1) | bits[7];
                          
         stateList[finalIndex] = 1;
         
+        // 6. JSON Canonicalization & SHA-256 (Sama bit-per-bit dengan Python json.dumps)
         let stateStr = JSON.stringify(stateList);
         const dataBuffer = new TextEncoder().encode(stateStr);
         const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
@@ -71,48 +77,56 @@
         return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Fungsi Utama: Pemeriksa Gerbang Kuantum
-    window.onload = async () => {
+        window.onload = async () => {
         const params = new URLSearchParams(window.location.search);
-        const userId = params.get('user_id');
-        const seedHex = params.get('seed_hex');
-        const remoteHash = params.get('quantum_hash');
+        const token = params.get('token');
         
-        if (userId && seedHex && remoteHash) {
-            document.getElementById('init-section').style.display = 'none';
-            document.getElementById('verify-section').style.display = 'block';
-            document.getElementById('console-log').style.display = 'block';
-            
-            logConsole(`Data masuk dari ID: ${userId}`);
-            logConsole("Membina padanan litar Big-Endian Cirq di klien...");
+        if (token) {
+            try {
+                // Nyahkod Token Base64
+                const decodedStr = atob(token);
+                const data = JSON.parse(decodedStr);
+                
+                const userId = data.u;
+                const seedHex = data.s;
+                const remoteHash = data.h;
 
-            const localHash = await calculateQuantumSignature(userId, seedHex);
-            
-            logConsole(`Cirq (Python) Hash: ${remoteHash.substring(0, 16)}...`);
-            logConsole(`Local (JS) Hash:    ${localHash.substring(0, 16)}...`);
+                document.getElementById('init-section').style.display = 'none';
+                document.getElementById('verify-section').style.display = 'block';
+                document.getElementById('console-log').style.display = 'block';
+                
+                logConsole(`Token Nyahsulit. ID: ${userId}`);
+                logConsole("Membina padanan litar Big-Endian Cirq di klien...");
 
-            setTimeout(async () => {
-                if (localHash === remoteHash) {
-                    logConsole("PADANAN STATE VECTOR BERJAYA.", "success");
-                    document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
-                    document.getElementById('status-text').className = "success";
-                    
-                    // PROSES PENGHANTARAN DATA KE LAMAN ARKIB
-                    // Kita sertakan data yang sama ke laman seterusnya
-                    const redirectUrl = `kucing-kuantum.html?user_id=${userId}&quantum_hash=${remoteHash}`;
-                    
-                    setTimeout(() => {
-                        window.location.href = redirectUrl;
-                    }, 1500);
-                    
-                } else {
-                    logConsole("RALAT KETAKSELARASAN LITAR!", "error");
-                    document.getElementById('status-text').innerText = "Akses Ditolak (Klon).";
-                    document.getElementById('status-text').className = "error";
-                }
-            }, 1000);
+                const localHash = await calculateQuantumSignature(userId, seedHex);
+                
+                logConsole(`Cirq (Python) Hash: ${remoteHash.substring(0, 16)}...`);
+                logConsole(`Local (JS) Hash:    ${localHash.substring(0, 16)}...`);
+
+                setTimeout(async () => {
+                    if (localHash === remoteHash) {
+                        logConsole("PADANAN STATE VECTOR BERJAYA.", "success");
+                        document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
+                        document.getElementById('status-text').className = "success";
+                        
+                        // Bawa TOKEN TERENKRIPSI ke laman arkib
+                        setTimeout(() => {
+                            window.location.href = `kucing-kuantum.html?token=${token}`;
+                        }, 1500);
+                        
+                    } else {
+                        logConsole("RALAT KETAKSELARASAN LITAR!", "error");
+                        document.getElementById('status-text').innerText = "Akses Ditolak (Klon).";
+                        document.getElementById('status-text').className = "error";
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                logConsole("RALAT: Token tidak sah atau rosak.", "error");
+            }
         }
     };
+
 </script>
 </body>
 </html>
