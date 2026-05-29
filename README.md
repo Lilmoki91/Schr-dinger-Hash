@@ -77,15 +77,6 @@ Tujuan asal:
 
 ---
 
-## 🌐 Pengikut GitHub  
-Projek ini diikuti oleh beberapa pembangun dari **Jerman dan Perancis**.  
-Mereka mungkin tidak faham bahasa Melayu – tapi mereka faham **kod quantum, hash, dan entanglement**.
-
-Mereka ikut bukan kerana projek ini sempurna.  
-Mereka ikut kerana projek ini **berani**.
-
----
-
 ## 📌 Rancangan Masa Depan (Version 2.0)  
 - [ ] Tambah **localStorage** supaya login kekal selepas refresh.  
 - [ ] Tambah **mesej rahsia / dashboard eksklusif** selepas akses dibenarkan.  
