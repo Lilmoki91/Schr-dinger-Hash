@@ -12,7 +12,7 @@
 ---
 
 ## 📚 Tentang Projek Ini  
-Projek ini dibina untuk tugasan sekolah di **SMK Rantau Panjang, Klang, Selangor**.  
+Projek ini dibina oleh pelajar sekolah di **SMK Rantau Panjang, Klang, Selangor**.  
 Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement) dengan **sistem login digital** menggunakan **litar quantum Cirq 8-Qubit**.
 
 Tujuan asal:  
@@ -46,7 +46,45 @@ Tujuan asal:
 
 ---
 
-## 🧪 Cara Guna (untuk guru / pemeriksa projek)  
+## 🖼️ Cara-cara akses sistem pengesahan ID litar simulator kuantum entanglement sejati pustaka CIRQ Dewan Bahasa Python + JavaScript Murni
+
+### 1️⃣ Login – Jana State Vector  
+*Klik "Jana State Vector (Telegram)" di laman utama untuk memulakan proses.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192742.jpg" alt="Langkah 1: Jana State Vector" width="400">
+</div>
+
+---
+
+### 2️⃣ Daftar ID / Terima Token dari Bot Telegram  
+*Bot Telegram akan menghantar ID Pengguna, Seed Dinamik, State 8-Qubit, dan Quantum Hash.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/Screenshot_2026-05-29-19-19-38-707_org.telegram.messenger.jpg" alt="Langkah 2: Bot Telegram" width="400">
+</div>
+
+---
+
+### 3️⃣ Pengesahan ID – Padanan State Vector & Quantum Hash  
+*Laman web akan membaca token, memaparkan state vector, dan memadankan hash dari Cirq (Python) dengan hash tempatan (JavaScript).*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192612.jpg" alt="Langkah 3: Padanan Hash" width="400">
+</div>
+
+---
+
+### 4️⃣ Akses Halaman Web / Apps  
+*Setelah hash serasi, sistem memaparkan "Akses Dibenarkan!" – pengguna berjaya masuk ke portal kuantum.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192659.jpg" alt="Langkah 4: Akses Dibenarkan" width="400">
+</div>
+
+---
+
+## 🧪 Cara Guna (Ringkasan Teks)  
 1. Buka laman utama:  
    👉 [https://lilmoki91.github.io/Schr-dinger-Hash/](https://lilmoki91.github.io/Schr-dinger-Hash/)  
 
@@ -85,7 +123,7 @@ Tujuan asal:
 ## 🙏 Penghargaan  
 - **Arwah ibu** – untuk telefon Samsung J Prime yang masih setia menemani.  
 - **Cikgu yang panggil saya bodoh** – terima kasih, sebab kata-kata awak jadi bahan api saya.  
-- **Erwin Schrödinger** – untuk kucing yang mati hidup serentak.  
+- **Profesor Erwin Schrödinger** – untuk kucing yang mati hidup serentak.  
 
 ---
 
