@@ -13,7 +13,6 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # Muatkan pembolehubah dari .env
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
-# Pastikan URL ini menuju tepat ke index.html (Gerbang Kuantum)
 WEBAPPS_URL = "https://lilmoki91.github.io/Schr-dinger-Hash/index.html"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -67,17 +66,19 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     seed_hex = secrets.token_hex(32)
     quantum_hash = calculate_quantum_signature(user_id, seed_hex)
     
+    # --- LOGIK VISUALISASI STATE QUBIT (Sama tepat seperti JavaScript di Web) ---
+    # Membaca 8 aksara pertama hash. Genap = |0⟩, Ganjil = |1⟩
+    q_state_visual = " ".join(["|0⟩" if int(char, 16) % 2 == 0 else "|1⟩" for char in quantum_hash[:8]])
+    # ----------------------------------------------------------------------------
+    
     # --- PROSES ENKRIPSI BASE64 (Sesuai dengan webapps terkini) ---
     token_data = {
         "u": user_id,
         "s": seed_hex,
         "h": quantum_hash
     }
-    # Tukar ke format JSON string
     json_str = json.dumps(token_data)
-    # Enkod ke Base64
     token_bytes = base64.b64encode(json_str.encode("utf-8"))
-    # Pastikan URL selamat (buang aksara bermasalah)
     token_safe = urllib.parse.quote(token_bytes.decode("utf-8"))
     # --------------------------------------------------------------
     
@@ -85,10 +86,10 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "<b>[LITAR CIRQ TERKUNCI]</b>\n\n"
         f"<b>• User ID:</b> <code>{user_id}</code>\n"
         f"<b>• Seed (Dinamic):</b> <code>{seed_hex[:12]}...</code>\n"
+        f"<b>• State 8-Qubit:</b> <code>{q_state_visual}</code>\n"
         f"<b>• Hash Kuantum:</b> <code>{quantum_hash[:16]}...</code>\n\n"
     )
     
-    # Pautan Webapps yang telah disulitkan (hanya menggunakan parameter ?token=)
     full_url = f"{WEBAPPS_URL}?token={token_safe}"
     
     await update.message.reply_text(msg, parse_mode="HTML")
