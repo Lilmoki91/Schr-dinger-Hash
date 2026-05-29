@@ -10,10 +10,14 @@ from dotenv import load_dotenv
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# Muatkan pembolehubah dari .env
+# Muatkan pembolehubah dari persekitaran (Environment Variables)
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 WEBAPPS_URL = "https://lilmoki91.github.io/Schr-dinger-Hash/index.html"
+
+# Pembolehubah khusus untuk Web Service di Render
+PORT = int(os.environ.get("PORT", "10000"))
+RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL")
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -22,29 +26,22 @@ def calculate_quantum_signature(user_id, seed_hex):
     qubits = cirq.LineQubit.range(8)
     circuit = cirq.Circuit()
     
-    # 1. Inisialisasi: 6 Qubit dinamik (seed)
     seed_bytes = bytes.fromhex(seed_hex[:12])
     for i in range(6):
         if (seed_bytes[i] % 2 == 1):
             circuit.append(cirq.X(qubits[i]))
             
-    # 2. Inisialisasi: 2 Qubit statik (user_id anchor)
     uid = int(user_id)
     if (uid % 256) > 128: circuit.append(cirq.X(qubits[6]))
     if ((uid >> 8) % 256) > 128: circuit.append(cirq.X(qubits[7]))
     
-    # 3. CNOT Entanglement (Control: Qubit 6, Target: Qubit 0-5)
     for i in range(6):
         circuit.append(cirq.CNOT(qubits[6], qubits[i]))
         
-    # 4. Simulasi Cirq Sebenar
     simulator = cirq.Simulator()
     result = simulator.simulate(circuit)
     
-    # 5. Ekstrak amplitud kepada senarai integer 0 dan 1 (Mengelakkan ralat JSON complex object)
     state_list = [1 if abs(val) > 0.5 else 0 for val in result.final_state_vector]
-    
-    # 6. Serialization seragam untuk JS (output: "[0,0,0,1,0...]")
     state_str = json.dumps(state_list, separators=(',', ':'))
     
     return hashlib.sha256(state_str.encode('utf-8')).hexdigest()
@@ -62,16 +59,11 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Ralat: Entropi fizikal tidak sepadan. Klon dikesan.")
         return
 
-    # Jana data kuantum
     seed_hex = secrets.token_hex(32)
     quantum_hash = calculate_quantum_signature(user_id, seed_hex)
     
-    # --- LOGIK VISUALISASI STATE QUBIT (Sama tepat seperti JavaScript di Web) ---
-    # Membaca 8 aksara pertama hash. Genap = |0⟩, Ganjil = |1⟩
     q_state_visual = " ".join(["|0⟩" if int(char, 16) % 2 == 0 else "|1⟩" for char in quantum_hash[:8]])
-    # ----------------------------------------------------------------------------
     
-    # --- PROSES ENKRIPSI BASE64 (Sesuai dengan webapps terkini) ---
     token_data = {
         "u": user_id,
         "s": seed_hex,
@@ -80,7 +72,6 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     json_str = json.dumps(token_data)
     token_bytes = base64.b64encode(json_str.encode("utf-8"))
     token_safe = urllib.parse.quote(token_bytes.decode("utf-8"))
-    # --------------------------------------------------------------
     
     msg = (
         "<b>[LITAR CIRQ TERKUNCI]</b>\n\n"
@@ -104,8 +95,20 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.CONTACT, handle_contact))
     
-    print("Enjin Cirq sedang beroperasi. Menunggu jalinan litar...")
-    application.run_polling()
+    # Deteksi persekitaran secara dinamik
+    if RENDER_EXTERNAL_URL:
+        # Mod Web Service (Webhook) untuk server Render
+        print(f"Mengikat Web Service pada port {PORT}. Menunggu isyarat masuk...")
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=PORT,
+            url_path=TOKEN,
+            webhook_url=f"{RENDER_EXTERNAL_URL}/{TOKEN}"
+        )
+    else:
+        # Mod Polling jika dijalankan pada komputer tempatan (Local)
+        print("Tiada URL Render dikesan. Menjalankan fallback Polling tempatan...")
+        application.run_polling()
 
 if __name__ == '__main__':
     main()
