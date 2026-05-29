@@ -1,5 +1,3 @@
-# ​Schrödinger's hash
-
 # Schrödinger Hash – Sistem Login Quantum Entanglement  
 **Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
 
