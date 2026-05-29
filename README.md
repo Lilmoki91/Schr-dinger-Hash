@@ -1,11 +1,8 @@
-```
-{"   
-      /\_/\
-     ( o.o )
-      > ^ <
-      🆔⚛️✨
-"}
-```
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="500">
+</div>
+
+<br>
 
 # Schrödinger Hash – Sistem Login Simulator Quantum Entanglement  
 **Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
