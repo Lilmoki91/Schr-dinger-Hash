@@ -13,7 +13,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # Muatkan pembolehubah dari persekitaran (Environment Variables)
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
-WEBAPPS_URL = "https://lilmoki91.github.io/Schr-dinger-Hash/index.html"
+WEBAPPS_URL = "https://schr-dinger-hash.pages.dev"
 
 # Pembolehubah khusus untuk Web Service di Render
 PORT = int(os.environ.get("PORT", "10000"))
