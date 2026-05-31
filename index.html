@@ -25,7 +25,15 @@
     
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN ID TELEGRAM</p>
-        <div id="telegram-login" class="telegram-login"></div>
+        <!-- Widget diletak terus di sini (STATIC, bukan dynamic) -->
+        <div id="telegram-login" class="telegram-login">
+            <script async src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="kipidaps_bot"
+                data-size="large"
+                data-onauth="onTelegramAuth(user)"
+                data-request-access="write">
+            </script>
+        </div>
         <p id="error-msg" class="error hidden"></p>
     </div>
     
@@ -36,7 +44,6 @@
 </div>
 
 <script>
-    const BOT_USERNAME = "kipidaps_bot";
     let state = {token: null, userIdFromToken: null, seedHex: null, remoteHash: null};
     
     function log(msg, cls) {
@@ -64,12 +71,19 @@
         return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
     }
     
-    // Telegram callback - letak dekat window
+    // Telegram callback - global window
     window.onTelegramAuth = async function(telegramUser) {
         console.log("Telegram user:", telegramUser);
         
         const loggedInUserId = telegramUser.id.toString();
         const errorMsg = document.getElementById('error-msg');
+        
+        // Semak jika tiada token (pengguna buka terus)
+        if (!state.userIdFromToken) {
+            errorMsg.innerText = "❌ Tiada token. Sila jana token dari bot Telegram terlebih dahulu.";
+            errorMsg.classList.remove('hidden');
+            return;
+        }
         
         if (loggedInUserId !== state.userIdFromToken) {
             errorMsg.innerText = `403 FORBIDDEN - Anda bukan pemilik ID ini. (Login sebagai: ${loggedInUserId})`;
@@ -103,39 +117,32 @@
     
     window.onload = () => {
         const token = new URLSearchParams(location.search).get('token');
-        if(!token) return;
         
-        try {
-            const data = JSON.parse(atob(token));
-            state.token = token;
-            state.userIdFromToken = data.u;
-            state.seedHex = data.s;
-            state.remoteHash = data.h;
-            
-            document.getElementById('init-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-            
-            // Load widget dengan cara yang betul
-            const container = document.getElementById('telegram-login');
-            container.innerHTML = '';
-            
-            // Buat script element
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://telegram.org/js/telegram-widget.js?22';
-            script.setAttribute('data-telegram-login', BOT_USERNAME);
-            script.setAttribute('data-size', 'large');
-            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-            script.setAttribute('data-request-access', 'write');
-            
-            container.appendChild(script);
-            
-        } catch(err) {
-            console.error(err);
-            document.getElementById('init-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('error-msg').innerText = "Token rosak atau tidak sah.";
-            document.getElementById('error-msg').classList.remove('hidden');
+        if (token) {
+            try {
+                const data = JSON.parse(atob(token));
+                state.token = token;
+                state.userIdFromToken = data.u;
+                state.seedHex = data.s;
+                state.remoteHash = data.h;
+                
+                // Sembunyi init, tunjuk login section
+                document.getElementById('init-section').classList.add('hidden');
+                document.getElementById('login-section').classList.remove('hidden');
+                
+                // Widget sudah ada statik, tidak perlu dynamic inject
+                console.log("Token loaded, waiting for Telegram login...");
+                
+            } catch(err) {
+                console.error(err);
+                document.getElementById('init-section').classList.add('hidden');
+                document.getElementById('login-section').classList.remove('hidden');
+                document.getElementById('error-msg').innerText = "Token rosak atau tidak sah.";
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        } else {
+            // Tiada token - tunjuk init section sahaja
+            console.log("No token found. Please generate from bot.");
         }
     };
 </script>
