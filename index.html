@@ -2,17 +2,19 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Identity Gate</title>
     <style>
-        *{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Courier New',monospace;background:#050914;color:#00ffcc;display:flex;justify-content:center;align-items:center;min-height:100vh;}
-        .container{background:#0b1120;border:1px solid #00ffcc;padding:30px;max-width:450px;text-align:center;}
-        .btn{display:block;width:100%;padding:12px;background:#00ffcc;color:#050914;font-weight:bold;margin-bottom:15px;cursor:pointer;border:none;text-decoration:none;border-radius:5px;}
-        .console{background:#000;color:#0f0;padding:15px;font-size:12px;text-align:left;height:200px;overflow-y:auto;border:1px solid #333;margin-top:15px;}
-        .error{color:#ff3333;}
-        .success{color:#00ffcc;}
-        .hidden{display:none;}
-        .telegram-login{min-height:80px;margin:20px 0;}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Courier New', monospace; background: #050914; color: #00ffcc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+        h1 { font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
+        .btn { display: block; width: 100%; padding: 12px; background: #00ffcc; color: #050914; font-weight: bold; margin-bottom: 15px; cursor: pointer; border: none; text-decoration: none; border-radius: 5px; }
+        .console { background: #000; color: #0f0; padding: 15px; font-size: 12px; text-align: left; height: 200px; overflow-y: auto; border: 1px solid #333; margin-top: 15px; }
+        .error { color: #ff3333; margin-top: 10px; font-weight: bold; }
+        .success { color: #00ffcc; }
+        .hidden { display: none; }
+        .telegram-login { min-height: 50px; margin: 20px 0; display: flex; justify-content: center; }
     </style>
 </head>
 <body>
@@ -20,20 +22,14 @@
     <h1>Quantum Identity Gate</h1>
     
     <div id="init-section">
+        <!-- Pastikan pautan ini sepadan dengan bot anda -->
         <a href="https://t.me/kipidaps_bot" target="_blank" class="btn">Jana State Vector (Telegram)</a>
     </div>
     
     <div id="login-section" class="hidden">
-        <p>🔐 SAHKAN ID TELEGRAM</p>
-        <!-- Widget diletak terus di sini (STATIC, bukan dynamic) -->
-        <div id="telegram-login" class="telegram-login">
-            <script async src="https://telegram.org/js/telegram-widget.js?22"
-                data-telegram-login="Hadamard_bot"
-                data-size="large"
-                data-onauth="onTelegramAuth(user)"
-                data-request-access="write">
-            </script>
-        </div>
+        <p>🔐 SAHKAN IDENTITI PEMERHATI</p>
+        <!-- Widget akan disuntik secara dinamik di sini -->
+        <div id="telegram-login" class="telegram-login"></div>
         <p id="error-msg" class="error hidden"></p>
     </div>
     
@@ -44,13 +40,13 @@
 </div>
 
 <script>
-    let state = {token: null, userIdFromToken: null, seedHex: null, remoteHash: null};
+    let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null };
     
-    function log(msg, cls) {
+    function log(msg, cls = '') {
         const box = document.getElementById('console-log');
         if(!box) return;
         const line = document.createElement('div');
-        line.className = cls || '';
+        line.className = cls;
         line.innerText = '> ' + msg;
         box.appendChild(line);
         box.scrollTop = box.scrollHeight;
@@ -58,35 +54,34 @@
     
     async function calculateQuantumHash(userIdStr, seedHex) {
         let bits = new Array(8).fill(0);
-        for(let i=0;i<6;i++) bits[i] = parseInt(seedHex.substr(i*2,2),16)%2;
+        for(let i=0; i<6; i++) bits[i] = parseInt(seedHex.substr(i*2, 2), 16) % 2;
         let uid = BigInt(userIdStr);
-        bits[6] = Number(uid%256n)>128?1:0;
-        bits[7] = Number((uid>>8n)%256n)>128?1:0;
-        for(let i=0;i<6;i++) if(bits[6]===1) bits[i] ^= 1;
-        let finalIndex = (bits[0]<<7)|(bits[1]<<6)|(bits[2]<<5)|(bits[3]<<4)|(bits[4]<<3)|(bits[5]<<2)|(bits[6]<<1)|bits[7];
+        bits[6] = Number(uid % 256n) > 128 ? 1 : 0;
+        bits[7] = Number((uid >> 8n) % 256n) > 128 ? 1 : 0;
+        for(let i=0; i<6; i++) if(bits[6] === 1) bits[i] ^= 1;
+        let finalIndex = (bits[0]<<7) | (bits[1]<<6) | (bits[2]<<5) | (bits[3]<<4) | (bits[4]<<3) | (bits[5]<<2) | (bits[6]<<1) | bits[7];
+        
         let stateList = new Array(256).fill(0);
         stateList[finalIndex] = 1;
         let stateStr = JSON.stringify(stateList);
+        
         const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stateStr));
-        return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
     
-    // Telegram callback - global window
+    // Fungsi Callback Global (Mesti ditakrifkan sebelum widget dipanggil)
     window.onTelegramAuth = async function(telegramUser) {
-        console.log("Telegram user:", telegramUser);
-        
         const loggedInUserId = telegramUser.id.toString();
         const errorMsg = document.getElementById('error-msg');
         
-        // Semak jika tiada token (pengguna buka terus)
         if (!state.userIdFromToken) {
-            errorMsg.innerText = "❌ Tiada token. Sila jana token dari bot Telegram terlebih dahulu.";
+            errorMsg.innerText = "❌ Tiada token. Sila lalui gerbang utama.";
             errorMsg.classList.remove('hidden');
             return;
         }
         
         if (loggedInUserId !== state.userIdFromToken) {
-            errorMsg.innerText = `403 FORBIDDEN - Anda bukan pemilik ID ini. (Login sebagai: ${loggedInUserId})`;
+            errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan dengan Token! ID Anda: ${loggedInUserId}`;
             errorMsg.classList.remove('hidden');
             return;
         }
@@ -96,53 +91,71 @@
         document.getElementById('verify-section').classList.remove('hidden');
         document.getElementById('console-log').style.display = 'block';
         
-        log(`✅ Identiti disahkan: ${loggedInUserId.substring(0,4)}...`);
-        log("Membina semula litar quantum...");
+        log(`✅ Identiti fizikal disahkan: ${loggedInUserId}`);
+        log("Membina litar kuantum...");
         
         const localHash = await calculateQuantumHash(state.userIdFromToken, state.seedHex);
-        log(`Hash Kuantum (Lokal): ${localHash.substring(0,16)}...`);
-        log(`Hash Kuantum (Remote): ${state.remoteHash.substring(0,16)}...`);
+        log(`Bot (Remote) Hash: ${state.remoteHash.substring(0,16)}...`);
+        log(`Web (Lokal) Hash:  ${localHash.substring(0,16)}...`);
         
         if (localHash === state.remoteHash) {
-            log("PADANAN STATE VECTOR BERJAYA", "success");
+            log("SINKRONISASI STATE BERJAYA", "success");
             document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
+            document.getElementById('status-text').className = "success";
+            
             setTimeout(() => {
                 window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
             }, 1500);
         } else {
-            log("RALAT: HASH TIDAK PADAN", "error");
-            document.getElementById('status-text').innerText = "Akses Ditolak.";
+            log("RALAT: KETAKSELARASAN LITAR", "error");
+            document.getElementById('status-text').innerText = "Akses Ditolak (Klon dikesan).";
+            document.getElementById('status-text').className = "error";
         }
     };
     
     window.onload = () => {
-        const token = new URLSearchParams(location.search).get('token');
+        const token = new URLSearchParams(window.location.search).get('token');
         
         if (token) {
             try {
                 const data = JSON.parse(atob(token));
+                
+                // Semak masa luput (jika ada implementasi TTL sebelum ini)
+                const currentTime = Math.floor(Date.now() / 1000);
+                if (data.exp && currentTime > data.exp) {
+                    throw new Error("TOKEN LUPUT");
+                }
+
                 state.token = token;
                 state.userIdFromToken = data.u;
                 state.seedHex = data.s;
                 state.remoteHash = data.h;
                 
-                // Sembunyi init, tunjuk login section
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
-                // Widget sudah ada statik, tidak perlu dynamic inject
-                console.log("Token loaded, waiting for Telegram login...");
+                // --- SUNTIKAN WIDGET DINAMIK ---
+                const widgetContainer = document.getElementById('telegram-login');
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = "https://telegram.org/js/telegram-widget.js?22";
+                
+                // PENTING: TUKAR NAMA BOT INI KEPADA NAMA BOT ANDA YANG SEBENAR
+                script.setAttribute('data-telegram-login', 'Hadamard_bot'); // <-- Semak ini!
+                script.setAttribute('data-size', 'large');
+                script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+                script.setAttribute('data-request-access', 'write');
+                
+                widgetContainer.appendChild(script);
+                console.log("Widget sedia untuk memaparkan identiti...");
                 
             } catch(err) {
-                console.error(err);
+                console.error("Ralat Nyahsulit:", err.message);
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
-                document.getElementById('error-msg').innerText = "Token rosak atau tidak sah.";
+                document.getElementById('error-msg').innerText = err.message === "TOKEN LUPUT" ? "Token telah tamat tempoh." : "Token rosak atau tidak sah.";
                 document.getElementById('error-msg').classList.remove('hidden');
             }
-        } else {
-            // Tiada token - tunjuk init section sahaja
-            console.log("No token found. Please generate from bot.");
         }
     };
 </script>
