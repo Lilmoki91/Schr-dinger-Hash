@@ -92,12 +92,9 @@ Tujuan asal:
 
 3. Bot akan memberi **token** (contoh: `eyJ1IjogIjczNDg2...`).  
 
-4. Salin token tersebut dan buka:  
-   👉 [https://lilmoki91.github.io/Schr-dinger-Hash/kucing-kuantum.html?token=...](https://lilmoki91.github.io/Schr-dinger-Hash/kucing-kuantum.html?token=...)  
+4. Laman akan memaparkan **ID Pengguna, State 8-Qubit, dan Quantum Hash**.  
 
-5. Laman akan memaparkan **ID Pengguna, State 8-Qubit, dan Quantum Hash**.  
-
-6. Jika hash dari bot dan laman **sama** – maka **Akses Dibenarkan!** ✅  
+5. Jika hash dari bot dan laman **sama** – maka **Akses Dibenarkan!** ✅  
 
 ---
 
