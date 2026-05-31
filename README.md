@@ -86,15 +86,16 @@ Tujuan asal:
 
 ## 🧪 Cara Guna (Ringkasan Teks)  
 1. Buka laman utama:  
-   👉 [https://lilmoki91.github.io/Schr-dinger-Hash/](https://lilmoki91.github.io/Schr-dinger-Hash/)  
+   👉
+[https://schr-dinger-hash.pages.dev/](https://schr-dinger-hash.pages.dev/) 
 
-2. Klik **“Jana State Vector (Telegram)”** – anda akan disambung ke Bot Telegram.  
+3. Klik **“Jana State Vector (Telegram)”** – anda akan disambung ke Bot Telegram.  
 
-3. Bot akan memberi **token** (contoh: `eyJ1IjogIjczNDg2...`).  
+4. Bot akan memberi **URL = token** (contoh: `eyJ1IjogIjczNDg2...`).  
 
-4. Laman akan memaparkan **ID Pengguna, State 8-Qubit, dan Quantum Hash**.  
+5. Laman akan memaparkan **ID Pengguna, State 8-Qubit, dan Quantum Hash**.  
 
-5. Jika hash dari bot dan laman **sama** – maka **Akses Dibenarkan!** ✅  
+6. Jika hash dari bot dan laman **sama** – maka **Akses Dibenarkan!** ✅  
 
 ---
 
