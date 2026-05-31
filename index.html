@@ -7,7 +7,7 @@
         *{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:'Courier New',monospace;background:#050914;color:#00ffcc;display:flex;justify-content:center;align-items:center;min-height:100vh;}
         .container{background:#0b1120;border:1px solid #00ffcc;padding:30px;max-width:450px;text-align:center;}
-        .btn{display:block;width:100%;padding:12px;background:#00ffcc;color:#050914;font-weight:bold;margin-bottom:15px;cursor:pointer;border:none;text-decoration:none;}
+        .btn{display:block;width:100%;padding:12px;background:#00ffcc;color:#050914;font-weight:bold;margin-bottom:15px;cursor:pointer;border:none;text-decoration:none;border-radius:5px;}
         .console{background:#000;color:#0f0;padding:15px;font-size:12px;text-align:left;height:200px;overflow-y:auto;border:1px solid #333;margin-top:15px;}
         .error{color:#ff3333;}
         .success{color:#00ffcc;}
@@ -19,19 +19,16 @@
 <div class="container">
     <h1>Quantum Identity Gate</h1>
     
-    <!-- SECTION 1: Init (Tiada Token) -->
     <div id="init-section">
         <a href="https://t.me/kipidaps_bot" target="_blank" class="btn">Jana State Vector (Telegram)</a>
     </div>
     
-    <!-- SECTION 2: Login (Ada Token, Belum Login) -->
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN ID TELEGRAM</p>
         <div id="telegram-login" class="telegram-login"></div>
         <p id="error-msg" class="error hidden"></p>
     </div>
     
-    <!-- SECTION 3: Verify (Sudah Login + Sah) -->
     <div id="verify-section" class="hidden">
         <p id="status-text">Menyelaras...</p>
         <div class="console" id="console-log"></div>
@@ -39,24 +36,12 @@
 </div>
 
 <script>
-    // ============================================================
-    // 1. CONFIGURATION
-    // ============================================================
-    const BOT_USERNAME = "kipidaps_bot";  // Guna username bot anda
+    const BOT_USERNAME = "kipidaps_bot";
+    let state = {token: null, userIdFromToken: null, seedHex: null, remoteHash: null};
     
-    let state = {
-        token: null,
-        userIdFromToken: null,
-        seedHex: null,
-        remoteHash: null
-    };
-    
-    // ============================================================
-    // 2. UTILITIES
-    // ============================================================
     function log(msg, cls) {
         const box = document.getElementById('console-log');
-        if (!box) return;
+        if(!box) return;
         const line = document.createElement('div');
         line.className = cls || '';
         line.innerText = '> ' + msg;
@@ -64,52 +49,37 @@
         box.scrollTop = box.scrollHeight;
     }
     
-    // ============================================================
-    // 3. QUANTUM HASH CALCULATION (Sama macam original)
-    // ============================================================
     async function calculateQuantumHash(userIdStr, seedHex) {
         let bits = new Array(8).fill(0);
-        for (let i = 0; i < 6; i++) {
-            bits[i] = parseInt(seedHex.substr(i * 2, 2), 16) % 2;
-        }
+        for(let i=0;i<6;i++) bits[i] = parseInt(seedHex.substr(i*2,2),16)%2;
         let uid = BigInt(userIdStr);
-        bits[6] = (Number(uid % 256n) > 128) ? 1 : 0;
-        bits[7] = (Number((uid >> 8n) % 256n) > 128) ? 1 : 0;
-        for (let i = 0; i < 6; i++) {
-            if (bits[6] === 1) bits[i] = bits[i] ^ 1;
-        }
-        let finalIndex = (bits[0] << 7) | (bits[1] << 6) | (bits[2] << 5) | 
-                         (bits[3] << 4) | (bits[4] << 3) | (bits[5] << 2) | 
-                         (bits[6] << 1) | bits[7];
+        bits[6] = Number(uid%256n)>128?1:0;
+        bits[7] = Number((uid>>8n)%256n)>128?1:0;
+        for(let i=0;i<6;i++) if(bits[6]===1) bits[i] ^= 1;
+        let finalIndex = (bits[0]<<7)|(bits[1]<<6)|(bits[2]<<5)|(bits[3]<<4)|(bits[4]<<3)|(bits[5]<<2)|(bits[6]<<1)|bits[7];
         let stateList = new Array(256).fill(0);
         stateList[finalIndex] = 1;
         let stateStr = JSON.stringify(stateList);
         const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stateStr));
-        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
     }
     
-    // ============================================================
-    // 4. TELEGRAM LOGIN CALLBACK (Ini yang buat 403)
-    // ============================================================
+    // Telegram callback - letak dekat window
     window.onTelegramAuth = async function(telegramUser) {
-        const loginSection = document.getElementById('login-section');
-        const errorMsg = document.getElementById('error-msg');
-        const verifySection = document.getElementById('verify-section');
-        const initSection = document.getElementById('init-section');
+        console.log("Telegram user:", telegramUser);
         
         const loggedInUserId = telegramUser.id.toString();
+        const errorMsg = document.getElementById('error-msg');
         
-        // 🔴 CHECK: Adakah orang yang login adalah pemilik ID dalam token?
         if (loggedInUserId !== state.userIdFromToken) {
             errorMsg.innerText = `403 FORBIDDEN - Anda bukan pemilik ID ini. (Login sebagai: ${loggedInUserId})`;
             errorMsg.classList.remove('hidden');
             return;
         }
         
-        // ✅ Sah! Teruskan
         errorMsg.classList.add('hidden');
-        loginSection.classList.add('hidden');
-        verifySection.classList.remove('hidden');
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('verify-section').classList.remove('hidden');
         document.getElementById('console-log').style.display = 'block';
         
         log(`✅ Identiti disahkan: ${loggedInUserId.substring(0,4)}...`);
@@ -131,37 +101,37 @@
         }
     };
     
-    // ============================================================
-    // 5. MAIN: BACA TOKEN DARI URL
-    // ============================================================
     window.onload = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        
-        if (!token) return;
+        const token = new URLSearchParams(location.search).get('token');
+        if(!token) return;
         
         try {
-            const decoded = atob(token);
-            const data = JSON.parse(decoded);
-            
+            const data = JSON.parse(atob(token));
             state.token = token;
             state.userIdFromToken = data.u;
             state.seedHex = data.s;
             state.remoteHash = data.h;
             
-            // Sembunyi init, tunjuk login section
             document.getElementById('init-section').classList.add('hidden');
             document.getElementById('login-section').classList.remove('hidden');
             
-            // Load Telegram Widget
+            // Load widget dengan cara yang betul
             const container = document.getElementById('telegram-login');
-            container.innerHTML = `<script async src="https://telegram.org/js/telegram-widget.js?22"
-                data-telegram-login="${BOT_USERNAME}"
-                data-size="large"
-                data-onauth="onTelegramAuth(user)"
-                data-request-access="write"><\/script>`;
-                
-        } catch (err) {
+            container.innerHTML = '';
+            
+            // Buat script element
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://telegram.org/js/telegram-widget.js?22';
+            script.setAttribute('data-telegram-login', BOT_USERNAME);
+            script.setAttribute('data-size', 'large');
+            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+            script.setAttribute('data-request-access', 'write');
+            
+            container.appendChild(script);
+            
+        } catch(err) {
+            console.error(err);
             document.getElementById('init-section').classList.add('hidden');
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('error-msg').innerText = "Token rosak atau tidak sah.";
