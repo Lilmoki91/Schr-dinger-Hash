@@ -4,9 +4,9 @@
 
 <br>
 
-# Schrödinger Hash – System Login 
+# Schrödinger Hash  
 
-## Simulator Quantum Hadamard CIRQ Entanglement  
+## System Login Simulator Quantum Hadamard CIRQ Entanglement  
 
 **Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
 
