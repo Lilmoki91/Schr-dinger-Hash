@@ -22,13 +22,11 @@
     <h1>Quantum Identity Gate</h1>
     
     <div id="init-section">
-        <!-- Pastikan pautan ini sepadan dengan bot anda -->
         <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">Jana State Vector (Telegram)</a>
     </div>
     
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN IDENTITI PEMERHATI</p>
-        <!-- Widget akan disuntik secara dinamik di sini -->
         <div id="telegram-login" class="telegram-login"></div>
         <p id="error-msg" class="error hidden"></p>
     </div>
@@ -40,7 +38,7 @@
 </div>
 
 <script>
-    let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null };
+    let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
     
     function log(msg, cls = '') {
         const box = document.getElementById('console-log');
@@ -69,7 +67,6 @@
         return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
     
-    // Fungsi Callback Global (Mesti ditakrifkan sebelum widget dipanggil)
     window.onTelegramAuth = async function(telegramUser) {
         const loggedInUserId = telegramUser.id.toString();
         const errorMsg = document.getElementById('error-msg');
@@ -79,6 +76,19 @@
             errorMsg.classList.remove('hidden');
             return;
         }
+        
+        // ========== TAMBAHAN: SEMAK TOKEN "SEKALI PAKAI" ==========
+        if (state.tokenId) {
+            const usedKey = `used_quantum_token_${state.tokenId}`;
+            if (sessionStorage.getItem(usedKey)) {
+                errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan!";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            // Tandakan token sudah digunakan
+            sessionStorage.setItem(usedKey, 'true');
+        }
+        // =========================================================
         
         if (loggedInUserId !== state.userIdFromToken) {
             errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan dengan Token! ID Anda: ${loggedInUserId}`;
@@ -120,28 +130,27 @@
             try {
                 const data = JSON.parse(atob(token));
                 
-                // Semak masa luput (jika ada implementasi TTL sebelum ini)
+                // ========== SEMAK EXPIRY (TTL) ==========
                 const currentTime = Math.floor(Date.now() / 1000);
                 if (data.exp && currentTime > data.exp) {
                     throw new Error("TOKEN LUPUT");
                 }
-
+                // =======================================
+                
                 state.token = token;
                 state.userIdFromToken = data.u;
                 state.seedHex = data.s;
                 state.remoteHash = data.h;
+                state.tokenId = data.tid || null;  // Untuk sekali pakai (jika ada)
                 
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
-                // --- SUNTIKAN WIDGET DINAMIK ---
                 const widgetContainer = document.getElementById('telegram-login');
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = "https://telegram.org/js/telegram-widget.js?22";
-                
-                // PENTING: TUKAR NAMA BOT INI KEPADA NAMA BOT ANDA YANG SEBENAR
-                script.setAttribute('data-telegram-login', 'kipidapps_bot'); // <-- Semak ini!
+                script.setAttribute('data-telegram-login', 'kipidapps_bot');
                 script.setAttribute('data-size', 'large');
                 script.setAttribute('data-onauth', 'onTelegramAuth(user)');
                 script.setAttribute('data-request-access', 'write');
