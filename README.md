@@ -234,6 +234,8 @@ Kami berikrar — dengan izin Allah:
 **Selamatkan iman, selamatkan data, selamatkan diri dari api neraka.**
 
 
+---
+
 ## 🤲 Doa dari Al quran untuk sistem login
 
 ### رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً ۚ إِنَّكَ أَنتَ الْوَهَّابُ
