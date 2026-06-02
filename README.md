@@ -140,3 +140,95 @@ Ia untuk budak kampung dengan telefon buruk yang tak pernah berhenti belajar.”
 – Zulkarnain / Johannes Hadamard  
 SMK Rantau Panjang, Klang, Selangor.  
 🇲🇾
+
+---
+
+## 🛡️ Peringatan: Jauhi Anasir Scammer Pencuri Data Login system (Menurut Islam)
+
+> *“Sesungguhnya Allah menyuruh kamu menunaikan amanah kepada yang berhak menerimanya…”*  
+> (Surah An-Nisa, 4:58)
+
+---
+
+### 🔥 Hakikat Scammer Data dalam Sistem Login
+
+Scammer data adalah mereka yang:
+- Meminta **data peribadi** (nombor telefon, ID Telegram, frasa pemulihan) dengan **tipu daya**.
+- Berkata *“Pendaftaran selamat”* — tetapi data dijual / disalah guna.
+- Menyamar sebagai platform sah untuk **mencuri identiti** dan **merampas akaun**.
+
+**Dalam Islam, ini adalah gabungan beberapa dosa besar:**
+1. **Curi (sariqah)** — mengambil hak orang tanpa izin.
+2. **Khianat (ghulul)** — mengkhianati amanah pengguna.
+3. **Menipu (taghrir / tadlis)** — mengelirukan dengan ‘muka’ pendaftaran.
+4. **Makan harta dengan batil** — menjual data untuk keuntungan haram.
+5. **Menyusahkan ummah (ad-darar)** — boleh menghancurkan hidup mangsa.
+
+---
+
+### 📜 Dalil & Ancaman
+
+> *“Dan janganlah kamu saling memakan harta sesamamu dengan jalan yang batil…”*  
+> (Al-Baqarah: 188)
+
+> *“Barangsiapa yang menipu, maka dia bukan dari golonganku.”*  
+> (HR Muslim)
+
+> *“Sesiapa yang mengambil hak saudaranya secara zalim (walaupun sedikit), Allah tidak akan redha sehingga dia menggantinya.”*  
+> (Hadis riwayat Ahmad)
+
+**Scammer data — jika tidak bertaubat dan memulihkan data mangsa, dosanya berterusan selagi data itu disalah guna.**
+
+---
+
+### 🧠 Nasihat untuk Pengguna (Agar Tidak Terpedaya)
+
+| Langkah | Peringatan |
+|---------|------------|
+| ✅ **Pastikan platform sah** | Semak URL, ulasan, testimoni. Jangan mudah klik. |
+| ✅ **Jangan beri frasa 12 perkataan** | Itu kunci kepada crypto / identiti. Simpan rahsia. |
+| ✅ **Semak ‘permission’ yang diminta** | Aplikasi doa / kalkulator tak perlu akses kenalan. |
+| ✅ **Guna `2FA` (pengesahan dua faktor)** | Walaupun data bocor, sukar dirampas. |
+| ✅ **Berdoa sebelum daftar** | Mohon perlindungan Allah dari tipu daya. |
+
+---
+
+### 🤲 Doa Mohon Dijauhi Scammer & Pencuri Data
+
+**Doa Ringkas (sebelum isi maklumat di platform digital):**
+
+> *“Ya Allah, lindungilah aku dari tipu daya pencuri data, dari khianat pengumpul maklumat, dan dari setiap sistem yang berpura-pura jujur tetapi menyembunyikan niat jahat.”*
+
+> *“Jika aku tersilap melangkah ke perangkap mereka — selamatkan aku sebelum `submit`.”*
+
+> *“Jadikanlah data peribadiku sebagai amanah yang dijaga, bukan sebagai `komoditi` yang dicuri.”*
+
+**Doa Mohon Ditunjukkan Platform yang Benar:**
+
+> *“Ya Allah, tunjukkan aku platform yang jujur. Tabirkan dariku sistem-sistem yang dirancang untuk mencuri. Sesungguhnya Engkau Maha Mengetahui apa yang tersembunyi dalam kod dan hati mereka.”*
+
+---
+
+### 📌 Komitmen Projek Ini (Jika Tuan Pembangun Platform)
+
+Kami berikrar — dengan izin Allah:
+
+| Perkara | Ikr |
+|---------|-----|
+| Tidak mengumpul data tanpa izin yang jelas | ✅ |
+| Tidak menjual / menyalah guna data pengguna | ✅ |
+| Tidak meminta ‘frasa pemulihan’ / kata laluan crypto | ✅ |
+| Memberi pilihan log keluar & padam data | ✅ |
+| Sekiranya tersilap — kami segera taubat dan perbaiki | ✅ |
+
+---
+
+## 🕊️ Penutup
+
+> *“Sebaik-baik manusia ialah yang paling bermanfaat untuk manusia lain.”*  
+> (Hadis riwayat Ahmad, Thabrani)
+
+**🌱 Jangan jadi pencuri data. Jangan jadi alat penyesatan. Jadilah pembangun yang jujur, yang sistemnya selamat bukan hanya pada kod — tetapi pada niat.**
+
+— Untuk pembangun, pengguna, dan sesiapa yang membaca:  
+**Selamatkan iman, selamatkan data, selamatkan diri dari api neraka.**
