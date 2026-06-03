@@ -22,13 +22,11 @@
 <div class="container">
     <h1>Quantum Identity Gate</h1>
     
-    <!-- SECTION 1: Init / Button Utama (sentiasa ada) -->
     <div id="init-section">
         <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">🔐 Jana State Vector (Telegram)</a>
         <p class="warning" style="font-size: 11px; margin-top: 5px;">⚠️ Token tamat selepas 30 saat – 10 minit (bergantung kekerapan akses)</p>
     </div>
     
-    <!-- SECTION 2: Login (Ada Token sah, belum login) -->
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN IDENTITI PEMERHATI</p>
         <div id="telegram-login" class="telegram-login"></div>
@@ -36,7 +34,6 @@
         <button id="backToInitBtn" class="btn" style="background: #333; color: #00ffcc; margin-top: 10px;">⬅ Kembali / Jana Token Baru</button>
     </div>
     
-    <!-- SECTION 3: Verify (Sudah Login + Sah) -->
     <div id="verify-section" class="hidden">
         <p id="status-text">Menyelaras...</p>
         <div class="console" id="console-log"></div>
@@ -44,6 +41,12 @@
 </div>
 
 <script>
+    // ========== KONFIGURASI ==========
+    const BOT_USERNAME = "kipidapps_bot";
+    // Untuk server check, kita guna localStorage simulation
+    // Dalam production, ganti dengan panggilan ke webhook bot
+    // =================================
+    
     let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
     
     function log(msg, cls = '') {
@@ -57,21 +60,32 @@
     }
     
     function resetToInit() {
-        // Reset state
         state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
-        // Tunjukkan init section, sembunyi yang lain
         document.getElementById('init-section').classList.remove('hidden');
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('verify-section').classList.add('hidden');
-        // Bersihkan widget container
         const widgetContainer = document.getElementById('telegram-login');
         widgetContainer.innerHTML = '';
-        // Bersihkan error
         const errorMsg = document.getElementById('error-msg');
         errorMsg.classList.add('hidden');
         errorMsg.innerText = '';
-        console.log("Kembali ke mod permulaan. Sila jana token baru dari bot.");
+        console.log("Kembali ke mod permulaan.");
     }
+    
+    // ========== SERVER-SIDE CHECK (Simulation) ==========
+    // Dalam production, ganti dengan fetch ke bot API:
+    // fetch(`https://api.telegram.org/bot<TOKEN>/sendMessage?chat_id=<ID>&text=/check_${tokenId}`)
+    async function isTokenUsedOnServer(tokenId) {
+        const serverKey = `server_used_${tokenId}`;
+        return localStorage.getItem(serverKey) === 'true';
+    }
+    
+    async function markTokenUsedOnServer(tokenId) {
+        const serverKey = `server_used_${tokenId}`;
+        localStorage.setItem(serverKey, 'true');
+        console.log("Token marked as used on server");
+    }
+    // ====================================================
     
     async function calculateQuantumHash(userIdStr, seedHex) {
         let bits = new Array(8).fill(0);
@@ -100,16 +114,29 @@
             return;
         }
         
-        // Semak token "sekali pakai"
+        // ========== SEMAK "SEKALI PAKAI" ==========
         if (state.tokenId) {
-            const usedKey = `used_quantum_token_${state.tokenId}`;
-            if (sessionStorage.getItem(usedKey)) {
+            // 1. Semak di server
+            const isUsed = await isTokenUsedOnServer(state.tokenId);
+            if (isUsed) {
                 errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan! Sila jana baru.";
                 errorMsg.classList.remove('hidden');
                 return;
             }
+            
+            // 2. Semak di sessionStorage (fallback)
+            const usedKey = `used_quantum_token_${state.tokenId}`;
+            if (sessionStorage.getItem(usedKey)) {
+                errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan di tab lain!";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            
+            // 3. Tandakan sebagai used (server + local)
+            await markTokenUsedOnServer(state.tokenId);
             sessionStorage.setItem(usedKey, 'true');
         }
+        // ==========================================
         
         if (loggedInUserId !== state.userIdFromToken) {
             errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan! ID Anda: ${loggedInUserId}`;
@@ -144,11 +171,8 @@
     window.onload = () => {
         const token = new URLSearchParams(window.location.search).get('token');
         
-        // Butang kembali
         const backBtn = document.getElementById('backToInitBtn');
-        if (backBtn) {
-            backBtn.addEventListener('click', resetToInit);
-        }
+        if (backBtn) backBtn.addEventListener('click', resetToInit);
         
         if (token) {
             try {
@@ -157,7 +181,6 @@
                 // Semak expiry
                 const currentTime = Math.floor(Date.now() / 1000);
                 if (data.exp && currentTime > data.exp) {
-                    // Token tamat, tunjuk init section dengan mesej
                     document.getElementById('init-section').classList.remove('hidden');
                     const warningMsg = document.createElement('p');
                     warningMsg.className = 'warning';
@@ -173,17 +196,15 @@
                 state.remoteHash = data.h;
                 state.tokenId = data.tid || null;
                 
-                // Sembunyi init, tunjuk login section
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
-                // Suntik widget Telegram
                 const widgetContainer = document.getElementById('telegram-login');
                 widgetContainer.innerHTML = '';
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = "https://telegram.org/js/telegram-widget.js?22";
-                script.setAttribute('data-telegram-login', 'kipidapps_bot');
+                script.setAttribute('data-telegram-login', BOT_USERNAME);
                 script.setAttribute('data-size', 'large');
                 script.setAttribute('data-onauth', 'onTelegramAuth(user)');
                 script.setAttribute('data-request-access', 'write');
@@ -191,7 +212,6 @@
                 
             } catch(err) {
                 console.error("Ralat:", err.message);
-                // Token rosak, tunjuk init section
                 document.getElementById('init-section').classList.remove('hidden');
                 const errorDiv = document.getElementById('error-msg');
                 errorDiv.innerText = "Token rosak atau tidak sah. Sila jana token baru dari bot.";
