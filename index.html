@@ -7,26 +7,44 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Courier New', monospace; background: #050914; color: #00ffcc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
         h1 { font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
         .btn { display: block; width: 100%; padding: 12px; background: #00ffcc; color: #050914; font-weight: bold; margin-bottom: 15px; cursor: pointer; border: none; text-decoration: none; border-radius: 5px; }
-        .console { background: #000; color: #0f0; padding: 15px; font-size: 12px; text-align: left; height: 200px; overflow-y: auto; border: 1px solid #333; margin-top: 15px; }
+        .console { background: #000; color: #0f0; padding: 15px; font-size: 12px; text-align: left; height: 250px; overflow-y: auto; border: 1px solid #333; margin-top: 15px; font-family: monospace; }
         .error { color: #ff3333; margin-top: 10px; font-weight: bold; }
         .success { color: #00ffcc; }
         .hidden { display: none; }
         .telegram-login { min-height: 50px; margin: 20px 0; display: flex; justify-content: center; }
         .warning { color: #ffaa00; margin-top: 10px; }
+        .data-panel { background: #0a0a0a; border: 1px solid #00ffcc33; border-radius: 8px; padding: 10px; margin-bottom: 15px; text-align: left; font-size: 11px; }
+        .data-panel div { margin: 5px 0; word-break: break-all; }
+        .label { color: #888; }
+        .value { color: #00ffcc; font-weight: bold; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Quantum Identity Gate</h1>
+    <h1>⚛️ Quantum Identity Gate</h1>
     
+    <!-- SECTION 1: Init / Button Utama -->
     <div id="init-section">
         <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">🔐 Jana State Vector (Telegram)</a>
-        <p class="warning" style="font-size: 11px; margin-top: 5px;">⚠️ Token tamat selepas 30 saat – 10 minit (bergantung kekerapan akses)</p>
+        <p class="warning" style="font-size: 11px; margin-top: 5px;">⚠️ Token tamat selepas 30s – 10 minit (Fibonacci TTL)</p>
     </div>
     
+    <!-- SECTION 2: Paparan Data Token (Sebelum Login) -->
+    <div id="data-section" class="hidden">
+        <div class="data-panel">
+            <div><span class="label">👤 User ID:</span> <span id="displayUserId" class="value">-</span></div>
+            <div><span class="label">🔢 Akses ke-:</span> <span id="displayAccessCount" class="value">-</span></div>
+            <div><span class="label">⏱️ Token sah:</span> <span id="displayTokenTTL" class="value">-</span></div>
+            <div><span class="label">🌱 Seed (Dinamic):</span> <span id="displaySeed" class="value">-</span></div>
+            <div><span class="label">💻 State 8-Qubit:</span> <span id="displayQubits" class="value">-</span></div>
+            <div><span class="label">🔑 Hash Kuantum:</span> <span id="displayHash" class="value">-</span></div>
+        </div>
+    </div>
+    
+    <!-- SECTION 3: Login (Ada Token, belum login) -->
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN IDENTITI PEMERHATI</p>
         <div id="telegram-login" class="telegram-login"></div>
@@ -34,8 +52,9 @@
         <button id="backToInitBtn" class="btn" style="background: #333; color: #00ffcc; margin-top: 10px;">⬅ Kembali / Jana Token Baru</button>
     </div>
     
+    <!-- SECTION 4: Verify (Sudah Login + Sah) -->
     <div id="verify-section" class="hidden">
-        <p id="status-text">Menyelaras...</p>
+        <p id="status-text">🌀 Menyelaras fungsi gelombang...</p>
         <div class="console" id="console-log"></div>
     </div>
 </div>
@@ -43,11 +62,18 @@
 <script>
     // ========== KONFIGURASI ==========
     const BOT_USERNAME = "kipidapps_bot";
-    // Untuk server check, kita guna localStorage simulation
-    // Dalam production, ganti dengan panggilan ke webhook bot
     // =================================
     
-    let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
+    let state = { 
+        token: null, 
+        userIdFromToken: null, 
+        seedHex: null, 
+        remoteHash: null, 
+        tokenId: null,
+        accessCount: null,
+        ttlSeconds: null,
+        qStateVisual: null
+    };
     
     function log(msg, cls = '') {
         const box = document.getElementById('console-log');
@@ -59,9 +85,21 @@
         box.scrollTop = box.scrollHeight;
     }
     
+    function formatTTL(seconds) {
+        if (!seconds) return "N/A";
+        if (seconds < 60) return `${seconds} saat`;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins} minit ${secs} saat`;
+    }
+    
     function resetToInit() {
-        state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
+        state = { 
+            token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null,
+            accessCount: null, ttlSeconds: null, qStateVisual: null
+        };
         document.getElementById('init-section').classList.remove('hidden');
+        document.getElementById('data-section').classList.add('hidden');
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('verify-section').classList.add('hidden');
         const widgetContainer = document.getElementById('telegram-login');
@@ -72,9 +110,30 @@
         console.log("Kembali ke mod permulaan.");
     }
     
-    // ========== SERVER-SIDE CHECK (Simulation) ==========
-    // Dalam production, ganti dengan fetch ke bot API:
-    // fetch(`https://api.telegram.org/bot<TOKEN>/sendMessage?chat_id=<ID>&text=/check_${tokenId}`)
+    // Papar data token dalam panel
+    function displayTokenData(data) {
+        document.getElementById('displayUserId').innerText = data.u || "-";
+        document.getElementById('displayAccessCount').innerText = data.cnt || "-";
+        document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ? ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
+        document.getElementById('displaySeed').innerText = data.s ? data.s.substring(0, 16) + "..." : "-";
+        
+        // State 8-Qubit visual dari hash (untuk paparan sahaja)
+        if (data.h) {
+            const qState = data.h.substring(0, 8).split('').map(c => 
+                (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
+            ).join(' ');
+            document.getElementById('displayQubits').innerText = qState;
+            document.getElementById('displayHash').innerText = data.h.substring(0, 16) + "...";
+            
+            // Simpan untuk rujukan
+            state.qStateVisual = qState;
+        }
+        
+        state.accessCount = data.cnt;
+        state.ttlSeconds = data.ttl;
+    }
+    
+    // Semak token used (server-side simulation)
     async function isTokenUsedOnServer(tokenId) {
         const serverKey = `server_used_${tokenId}`;
         return localStorage.getItem(serverKey) === 'true';
@@ -85,7 +144,6 @@
         localStorage.setItem(serverKey, 'true');
         console.log("Token marked as used on server");
     }
-    // ====================================================
     
     async function calculateQuantumHash(userIdStr, seedHex) {
         let bits = new Array(8).fill(0);
@@ -116,7 +174,6 @@
         
         // ========== SEMAK "SEKALI PAKAI" ==========
         if (state.tokenId) {
-            // 1. Semak di server
             const isUsed = await isTokenUsedOnServer(state.tokenId);
             if (isUsed) {
                 errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan! Sila jana baru.";
@@ -124,7 +181,6 @@
                 return;
             }
             
-            // 2. Semak di sessionStorage (fallback)
             const usedKey = `used_quantum_token_${state.tokenId}`;
             if (sessionStorage.getItem(usedKey)) {
                 errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan di tab lain!";
@@ -132,7 +188,6 @@
                 return;
             }
             
-            // 3. Tandakan sebagai used (server + local)
             await markTokenUsedOnServer(state.tokenId);
             sessionStorage.setItem(usedKey, 'true');
         }
@@ -145,26 +200,34 @@
         }
         
         errorMsg.classList.add('hidden');
+        document.getElementById('data-section').classList.add('hidden');
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('verify-section').classList.remove('hidden');
         document.getElementById('console-log').style.display = 'block';
         
         log(`✅ Identiti disahkan: ${loggedInUserId}`);
-        log("Membina litar kuantum...");
+        if (state.accessCount) log(`📊 Akses ke-: ${state.accessCount}`);
+        if (state.ttlSeconds) log(`⏱️ Token sah: ${formatTTL(state.ttlSeconds)}`);
+        if (state.qStateVisual) log(`💻 State 8-Qubit: ${state.qStateVisual}`);
+        log(`🔑 Hash Kuantum: ${state.remoteHash.substring(0,16)}...`);
+        log("🌀 Membina litar kuantum...");
         
         const localHash = await calculateQuantumHash(state.userIdFromToken, state.seedHex);
-        log(`Bot Hash: ${state.remoteHash.substring(0,16)}...`);
-        log(`Local Hash: ${localHash.substring(0,16)}...`);
+        log(`🤖 Bot Hash: ${state.remoteHash.substring(0,16)}...`);
+        log(`💻 Local Hash: ${localHash.substring(0,16)}...`);
         
         if (localHash === state.remoteHash) {
-            log("PADANAN BERJAYA", "success");
-            document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
+            log("✅ PADANAN BERJAYA", "success");
+            document.getElementById('status-text').innerText = "✨ Portal Berdaulat Dibuka ✨";
+            document.getElementById('status-text').className = "success";
+            
             setTimeout(() => {
                 window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
-            }, 1500);
+            }, 2000);
         } else {
-            log("HASH TIDAK PADAN", "error");
-            document.getElementById('status-text').innerText = "Akses Ditolak.";
+            log("❌ RALAT: HASH TIDAK PADAN", "error");
+            document.getElementById('status-text').innerText = "⛔ Akses Ditolak.";
+            document.getElementById('status-text').className = "error";
         }
     };
     
@@ -196,9 +259,19 @@
                 state.remoteHash = data.h;
                 state.tokenId = data.tid || null;
                 
+                // Simpan data tambahan dari token (jika ada)
+                if (data.cnt) state.accessCount = data.cnt;
+                if (data.ttl) state.ttlSeconds = data.ttl;
+                
+                // Papar data token dalam panel
+                displayTokenData(data);
+                
+                // Sembunyi init, tunjuk data + login section
                 document.getElementById('init-section').classList.add('hidden');
+                document.getElementById('data-section').classList.remove('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
+                // Suntik widget Telegram
                 const widgetContainer = document.getElementById('telegram-login');
                 widgetContainer.innerHTML = '';
                 const script = document.createElement('script');
