@@ -15,22 +15,28 @@
         .success { color: #00ffcc; }
         .hidden { display: none; }
         .telegram-login { min-height: 50px; margin: 20px 0; display: flex; justify-content: center; }
+        .warning { color: #ffaa00; margin-top: 10px; }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Quantum Identity Gate</h1>
     
+    <!-- SECTION 1: Init / Button Utama (sentiasa ada) -->
     <div id="init-section">
-        <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">Jana State Vector (Telegram)</a>
+        <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">🔐 Jana State Vector (Telegram)</a>
+        <p class="warning" style="font-size: 11px; margin-top: 5px;">⚠️ Token tamat selepas 30 saat – 10 minit (bergantung kekerapan akses)</p>
     </div>
     
+    <!-- SECTION 2: Login (Ada Token sah, belum login) -->
     <div id="login-section" class="hidden">
         <p>🔐 SAHKAN IDENTITI PEMERHATI</p>
         <div id="telegram-login" class="telegram-login"></div>
         <p id="error-msg" class="error hidden"></p>
+        <button id="backToInitBtn" class="btn" style="background: #333; color: #00ffcc; margin-top: 10px;">⬅ Kembali / Jana Token Baru</button>
     </div>
     
+    <!-- SECTION 3: Verify (Sudah Login + Sah) -->
     <div id="verify-section" class="hidden">
         <p id="status-text">Menyelaras...</p>
         <div class="console" id="console-log"></div>
@@ -48,6 +54,23 @@
         line.innerText = '> ' + msg;
         box.appendChild(line);
         box.scrollTop = box.scrollHeight;
+    }
+    
+    function resetToInit() {
+        // Reset state
+        state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null };
+        // Tunjukkan init section, sembunyi yang lain
+        document.getElementById('init-section').classList.remove('hidden');
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('verify-section').classList.add('hidden');
+        // Bersihkan widget container
+        const widgetContainer = document.getElementById('telegram-login');
+        widgetContainer.innerHTML = '';
+        // Bersihkan error
+        const errorMsg = document.getElementById('error-msg');
+        errorMsg.classList.add('hidden');
+        errorMsg.innerText = '';
+        console.log("Kembali ke mod permulaan. Sila jana token baru dari bot.");
     }
     
     async function calculateQuantumHash(userIdStr, seedHex) {
@@ -72,26 +95,24 @@
         const errorMsg = document.getElementById('error-msg');
         
         if (!state.userIdFromToken) {
-            errorMsg.innerText = "❌ Tiada token. Sila lalui gerbang utama.";
+            errorMsg.innerText = "❌ Tiada token. Sila jana token baru dari bot.";
             errorMsg.classList.remove('hidden');
             return;
         }
         
-        // ========== TAMBAHAN: SEMAK TOKEN "SEKALI PAKAI" ==========
+        // Semak token "sekali pakai"
         if (state.tokenId) {
             const usedKey = `used_quantum_token_${state.tokenId}`;
             if (sessionStorage.getItem(usedKey)) {
-                errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan!";
+                errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan! Sila jana baru.";
                 errorMsg.classList.remove('hidden');
                 return;
             }
-            // Tandakan token sudah digunakan
             sessionStorage.setItem(usedKey, 'true');
         }
-        // =========================================================
         
         if (loggedInUserId !== state.userIdFromToken) {
-            errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan dengan Token! ID Anda: ${loggedInUserId}`;
+            errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan! ID Anda: ${loggedInUserId}`;
             errorMsg.classList.remove('hidden');
             return;
         }
@@ -101,52 +122,64 @@
         document.getElementById('verify-section').classList.remove('hidden');
         document.getElementById('console-log').style.display = 'block';
         
-        log(`✅ Identiti fizikal disahkan: ${loggedInUserId}`);
+        log(`✅ Identiti disahkan: ${loggedInUserId}`);
         log("Membina litar kuantum...");
         
         const localHash = await calculateQuantumHash(state.userIdFromToken, state.seedHex);
-        log(`Bot (Remote) Hash: ${state.remoteHash.substring(0,16)}...`);
-        log(`Web (Lokal) Hash:  ${localHash.substring(0,16)}...`);
+        log(`Bot Hash: ${state.remoteHash.substring(0,16)}...`);
+        log(`Local Hash: ${localHash.substring(0,16)}...`);
         
         if (localHash === state.remoteHash) {
-            log("SINKRONISASI STATE BERJAYA", "success");
+            log("PADANAN BERJAYA", "success");
             document.getElementById('status-text').innerText = "Portal Berdaulat Dibuka.";
-            document.getElementById('status-text').className = "success";
-            
             setTimeout(() => {
                 window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
             }, 1500);
         } else {
-            log("RALAT: KETAKSELARASAN LITAR", "error");
-            document.getElementById('status-text').innerText = "Akses Ditolak (Klon dikesan).";
-            document.getElementById('status-text').className = "error";
+            log("HASH TIDAK PADAN", "error");
+            document.getElementById('status-text').innerText = "Akses Ditolak.";
         }
     };
     
     window.onload = () => {
         const token = new URLSearchParams(window.location.search).get('token');
         
+        // Butang kembali
+        const backBtn = document.getElementById('backToInitBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', resetToInit);
+        }
+        
         if (token) {
             try {
                 const data = JSON.parse(atob(token));
                 
-                // ========== SEMAK EXPIRY (TTL) ==========
+                // Semak expiry
                 const currentTime = Math.floor(Date.now() / 1000);
                 if (data.exp && currentTime > data.exp) {
-                    throw new Error("TOKEN LUPUT");
+                    // Token tamat, tunjuk init section dengan mesej
+                    document.getElementById('init-section').classList.remove('hidden');
+                    const warningMsg = document.createElement('p');
+                    warningMsg.className = 'warning';
+                    warningMsg.innerText = '⚠️ Token telah tamat tempoh. Sila jana token baru dari bot.';
+                    document.getElementById('init-section').appendChild(warningMsg);
+                    setTimeout(() => warningMsg.remove(), 5000);
+                    return;
                 }
-                // =======================================
                 
                 state.token = token;
                 state.userIdFromToken = data.u;
                 state.seedHex = data.s;
                 state.remoteHash = data.h;
-                state.tokenId = data.tid || null;  // Untuk sekali pakai (jika ada)
+                state.tokenId = data.tid || null;
                 
+                // Sembunyi init, tunjuk login section
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
+                // Suntik widget Telegram
                 const widgetContainer = document.getElementById('telegram-login');
+                widgetContainer.innerHTML = '';
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = "https://telegram.org/js/telegram-widget.js?22";
@@ -154,16 +187,16 @@
                 script.setAttribute('data-size', 'large');
                 script.setAttribute('data-onauth', 'onTelegramAuth(user)');
                 script.setAttribute('data-request-access', 'write');
-                
                 widgetContainer.appendChild(script);
-                console.log("Widget sedia untuk memaparkan identiti...");
                 
             } catch(err) {
-                console.error("Ralat Nyahsulit:", err.message);
-                document.getElementById('init-section').classList.add('hidden');
-                document.getElementById('login-section').classList.remove('hidden');
-                document.getElementById('error-msg').innerText = err.message === "TOKEN LUPUT" ? "Token telah tamat tempoh." : "Token rosak atau tidak sah.";
-                document.getElementById('error-msg').classList.remove('hidden');
+                console.error("Ralat:", err.message);
+                // Token rosak, tunjuk init section
+                document.getElementById('init-section').classList.remove('hidden');
+                const errorDiv = document.getElementById('error-msg');
+                errorDiv.innerText = "Token rosak atau tidak sah. Sila jana token baru dari bot.";
+                errorDiv.classList.remove('hidden');
+                setTimeout(() => errorDiv.classList.add('hidden'), 5000);
             }
         }
     };
