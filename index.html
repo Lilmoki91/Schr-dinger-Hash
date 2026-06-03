@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Courier New', monospace; background: #050914; color: #00ffcc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+        .container { background: #0b1120; border: 1px solid #00ffcc; padding: 30px; max-width: 550px; width: 100%; text-align: center; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
         h1 { font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
         .btn { display: block; width: 100%; padding: 12px; background: #00ffcc; color: #050914; font-weight: bold; margin-bottom: 15px; cursor: pointer; border: none; text-decoration: none; border-radius: 5px; }
         .console { background: #000; color: #0f0; padding: 15px; font-size: 12px; text-align: left; height: 250px; overflow-y: auto; border: 1px solid #333; margin-top: 15px; font-family: monospace; }
@@ -20,6 +20,7 @@
         .data-panel div { margin: 5px 0; word-break: break-all; }
         .label { color: #888; }
         .value { color: #00ffcc; font-weight: bold; }
+        .highlight { color: #00ffcc; background: #00ffcc20; border-radius: 4px; padding: 2px 4px; }
     </style>
 </head>
 <body>
@@ -35,6 +36,7 @@
     <!-- SECTION 2: Paparan Data Token (Sebelum Login) -->
     <div id="data-section" class="hidden">
         <div class="data-panel">
+            <div><span class="label">🌀 Quantum Matrix ID:</span> <span id="displayQuantumMatrixId" class="value highlight">-</span></div>
             <div><span class="label">👤 User ID:</span> <span id="displayUserId" class="value">-</span></div>
             <div><span class="label">🔢 Akses ke-:</span> <span id="displayAccessCount" class="value">-</span></div>
             <div><span class="label">⏱️ Token sah:</span> <span id="displayTokenTTL" class="value">-</span></div>
@@ -72,7 +74,8 @@
         tokenId: null,
         accessCount: null,
         ttlSeconds: null,
-        qStateVisual: null
+        qStateVisual: null,
+        quantumMatrixId: null
     };
     
     function log(msg, cls = '') {
@@ -96,7 +99,7 @@
     function resetToInit() {
         state = { 
             token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null,
-            accessCount: null, ttlSeconds: null, qStateVisual: null
+            accessCount: null, ttlSeconds: null, qStateVisual: null, quantumMatrixId: null
         };
         document.getElementById('init-section').classList.remove('hidden');
         document.getElementById('data-section').classList.add('hidden');
@@ -112,6 +115,14 @@
     
     // Papar data token dalam panel
     function displayTokenData(data) {
+        // Quantum Matrix ID (kekal untuk user)
+        if (data.qid) {
+            document.getElementById('displayQuantumMatrixId').innerText = data.qid;
+            state.quantumMatrixId = data.qid;
+        } else {
+            document.getElementById('displayQuantumMatrixId').innerText = "-";
+        }
+        
         document.getElementById('displayUserId').innerText = data.u || "-";
         document.getElementById('displayAccessCount').innerText = data.cnt || "-";
         document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ? ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
@@ -206,6 +217,7 @@
         document.getElementById('console-log').style.display = 'block';
         
         log(`✅ Identiti disahkan: ${loggedInUserId}`);
+        if (state.quantumMatrixId) log(`🌀 Quantum Matrix ID: ${state.quantumMatrixId}`);
         if (state.accessCount) log(`📊 Akses ke-: ${state.accessCount}`);
         if (state.ttlSeconds) log(`⏱️ Token sah: ${formatTTL(state.ttlSeconds)}`);
         if (state.qStateVisual) log(`💻 State 8-Qubit: ${state.qStateVisual}`);
@@ -258,6 +270,7 @@
                 state.seedHex = data.s;
                 state.remoteHash = data.h;
                 state.tokenId = data.tid || null;
+                state.quantumMatrixId = data.qid || null;
                 
                 // Simpan data tambahan dari token (jika ada)
                 if (data.cnt) state.accessCount = data.cnt;
