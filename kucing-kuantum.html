@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkib Rahsia | Kucing Kuantum</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: '#00ff66',
+                        'neon-dim': '#00cc50',
+                        'dark-panel': '#0a0f18',
+                        'dark-card': '#0f1522',
+                        'dark-bg': '#03050a',
+                        'text-main': '#dce4ec',
+                        'text-muted': '#8899aa',
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Courier New', 'monospace'],
+                        display: ['Orbitron', 'Courier New', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'border-spin': 'borderSpin 6s linear infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'scan': 'scan 8s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { textShadow: '0 0 20px rgba(0,255,102,0.4), 0 0 50px rgba(0,255,102,0.2)' },
+                            '50%': { textShadow: '0 0 35px rgba(0,255,102,0.6), 0 0 80px rgba(0,255,102,0.3)' },
+                        },
+                        borderSpin: {
+                            '0%': { backgroundPosition: '0% 0%' },
+                            '100%': { backgroundPosition: '300% 0%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeInUp: {
+                            'from': { opacity: '0', transform: 'translateY(30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' },
+                        },
+                        scan: {
+                            '0%': { top: '-5%' },
+                            '100%': { top: '105%' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #03050a;
+            background-image: 
+                radial-gradient(ellipse at 50% 0%, rgba(0, 255, 102, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 180, 80, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(0, 255, 150, 0.03) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 102, 0.012) 2px, rgba(0, 255, 102, 0.012) 4px);
+        }
+        .glass-panel {
+            background: rgba(10, 15, 24, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .quantum-border {
+            position: relative;
+            border-radius: 14px;
+        }
+        .quantum-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            padding: 2px;
+            background: linear-gradient(135deg, #00ff66, transparent 30%, transparent 70%, #00ff66);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: borderSpin 6s linear infinite;
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.1), 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 102, 0.6), transparent);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .block-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(3, 5, 10, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .block-card {
+            background: #0a0f18;
+            border: 2px solid #ff4444;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(255, 68, 68, 0.3), 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        .typewriter-effect {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3.5s steps(40, end);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #03050a; }
+        ::-webkit-scrollbar-thumb { background: #1a3a2a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ff66; }
+        @media (max-width: 640px) {
+            .quantum-border::before { display: none; }
+            .block-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body class="font-mono text-text-main min-h-screen p-4 sm:p-6 lg:p-8">
+
+    <!-- BLOCK OVERLAY -->
+    <div id="block-overlay" class="block-overlay hidden">
+        <div class="block-card" id="block-card">
+            <div class="mb-6">
+                <i data-lucide="shield-alert" class="w-16 h-16 text-red-500 mx-auto" id="block-icon"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-display font-black text-red-500 mb-3" id="block-title">AKSES DISEKAT</h2>
+            <p class="text-sm text-text-muted mb-2" id="block-message">Anda tidak mempunyai kebenaran untuk mengakses halaman ini.</p>
+            <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
+                <p class="text-xs text-red-400" id="block-reason">Sebab: Tiada token pengesahan.</p>
+            </div>
+            <div class="mb-6">
+                <p class="text-xs text-text-muted mb-2">Anda akan dihalakan semula ke halaman utama dalam:</p>
+                <div class="text-4xl font-display font-black text-neon" id="countdown-timer">5</div>
+                <p class="text-xs text-text-muted mt-1">saat</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="window.location.href='index.html'" class="group relative inline-flex items-center gap-2 px-6 py-3 bg-red-500/20 border-2 border-red-500 text-red-400 font-display font-bold uppercase tracking-wider rounded-full overflow-hidden transition-all duration-300 hover:bg-red-500 hover:text-white hover:shadow-[0_0_30px_rgba(255,68,68,0.5)]">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>Kembali ke Utama</span>
+                </button>
+                <button onclick="window.location.reload()" class="group relative inline-flex items-center gap-2 px-6 py-3 bg-neon/10 border-2 border-neon/50 text-neon font-display font-bold uppercase tracking-wider rounded-full overflow-hidden transition-all duration-300 hover:bg-neon hover:text-dark-bg hover:shadow-[0_0_30px_rgba(0,255,102,0.5)]">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span>Cuba Lagi</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div id="particles-container"></div>
+
+    <!-- Main Container -->
+    <div class="max-w-5xl mx-auto relative z-10">
+        <div class="quantum-border glass-panel rounded-2xl p-6 sm:p-8 lg:p-10 relative overflow-hidden opacity-0" id="main-panel">
+            
+            <div class="scan-line"></div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mt-6 mb-6 pb-4 border-b border-gray-800/50">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="atom" class="w-5 h-5 text-neon animate-pulse"></i>
+                    <span class="text-xs text-text-muted uppercase tracking-widest">Quantum Terminal v2.0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-neon rounded-full animate-pulse" id="status-dot"></span>
+                    <span class="text-xs text-neon" id="status-text">ENTANGLED</span>
+                </div>
+            </div>
+
+            <!-- ========== TELEMETRY DASHBOARD (5 KAD) ========== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8" id="telemetry-grid">
+                
+                <!-- Card 1: Quantum Matrix ID -->
+                <div class="bg-dark-card rounded-xl p-4 border border-neon/40 card-hover opacity-0" id="card-qid">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="grid-3x3" class="w-4 h-4 text-neon"></i>
+                        <span class="text-xs text-text-muted uppercase tracking-wider">Matrix ID</span>
+                    </div>
+                    <div class="text-sm font-bold text-neon font-mono truncate" id="qid-display">---</div>
+                </div>
+
+                <!-- Card 2: ID Pengguna -->
+                <div class="bg-dark-card rounded-xl p-4 border border-gray-800/30 card-hover opacity-0" id="card-uid">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="fingerprint" class="w-4 h-4 text-neon"></i>
+                        <span class="text-xs text-text-muted uppercase tracking-wider">ID Pengguna</span>
+                    </div>
+                    <div class="text-sm font-bold text-neon font-mono truncate" id="uid">---</div>
+                </div>
+
+                <!-- Card 3: Akses Ke- -->
+                <div class="bg-dark-card rounded-xl p-4 border border-gray-800/30 card-hover opacity-0" id="card-cnt">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="hash" class="w-4 h-4 text-neon"></i>
+                        <span class="text-xs text-text-muted uppercase tracking-wider">Akses Ke-</span>
+                    </div>
+                    <div class="text-sm font-bold text-neon font-mono" id="access-count">---</div>
+                </div>
+
+                <!-- Card 4: State 8-Qubit -->
+                <div class="bg-dark-card rounded-xl p-4 border border-gray-800/30 card-hover opacity-0" id="card-qubits">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="binary" class="w-4 h-4 text-neon"></i>
+                        <span class="text-xs text-text-muted uppercase tracking-wider">State 8-Qubit</span>
+                    </div>
+                    <div class="text-xs font-bold text-neon font-mono break-all" id="qubits">---</div>
+                </div>
+
+                <!-- Card 5: Quantum Hash -->
+                <div class="bg-dark-card rounded-xl p-4 border border-gray-800/30 card-hover opacity-0" id="card-hash">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="key" class="w-4 h-4 text-neon"></i>
+                        <span class="text-xs text-text-muted uppercase tracking-wider">Quantum Hash</span>
+                    </div>
+                    <div class="text-sm font-bold text-neon font-mono truncate" id="hash">---</div>
+                </div>
+            </div>
+            <!-- ========== END TELEMETRY ========== -->
+
+            <!-- Warning/Status Area -->
+            <div id="warning-area" class="mb-6 opacity-0"></div>
+
+            <!-- Title Section -->
+            <div class="text-center mb-8 opacity-0" id="title-section">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-neon animate-pulse-glow uppercase tracking-wider mb-2">
+                    Lagenda Kucing Kuantum
+                </h1>
+                <div class="inline-block bg-dark-card px-4 py-1.5 rounded-full border border-gray-800/50">
+                    <span class="text-xs sm:text-sm text-text-muted typewriter-effect">
+                        Eksperimen Minda Erwin Schrödinger (1935)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="space-y-6">
+                <div class="opacity-0 story-section" id="section-1">
+                    <h2 class="flex items-center gap-3 text-lg sm:text-xl font-display font-semibold text-white mb-3">
+                        <span class="w-1 h-6 bg-neon rounded-full"></span>
+                        <i data-lucide="microscope" class="w-5 h-5 text-neon"></i>
+                        Paradoks Realiti
+                    </h2>
+                    <p class="text-sm sm:text-base text-text-muted leading-relaxed text-justify">
+                        Pada tahun 1935, ahli fizik 
+                        <span class="text-neon font-bold">Erwin Schrödinger</span> 
+                        mengusulkan sebuah eksperimen minda yang radikal untuk mengkritik Interpretasi Copenhagen dalam mekanik kuantum. Beliau membayangkan sebuah senario yang pelik tetapi menakjubkan yang kini menjadi asas kepada kefahaman pengkomputeran kuantum moden.
+                    </p>
+                </div>
+
+                <div class="quantum-border my-8 opacity-0" id="quantum-box">
+                    <div class="bg-dark-card rounded-xl p-5 sm:p-6 border border-neon/20 relative">
+                        <div class="absolute -top-3 left-6 bg-dark-bg px-3 py-0.5 rounded-full border border-neon/30">
+                            <span class="text-xs font-bold text-neon uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="box" class="w-3 h-3"></i>
+                                Kotak Keluli Schrödinger
+                            </span>
+                        </div>
+                        <div class="mt-2 space-y-3">
+                            <p class="text-sm sm:text-base text-text-muted">Bayangkan seekor kucing dimasukkan ke dalam sebuah kotak keluli yang tertutup rapat. Di dalam kotak tersebut, terdapat sebuah mekanisma maut:</p>
+                            <div class="flex flex-wrap gap-2 text-xs sm:text-sm">
+                                <span class="bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">⚡ Atom Radioaktif</span>
+                                <span class="bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">📡 Pengesan Geiger</span>
+                                <span class="bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">🔨 Tukul</span>
+                                <span class="bg-neon/10 text-neon px-3 py-1 rounded-full border border-neon/20">🧪 Gas Beracun</span>
+                            </div>
+                            <p class="text-sm sm:text-base text-text-muted">Jika atom tersebut mereput (decay), pengesan akan mencetuskannya, tukul akan memecahkan kelalang, dan gas beracun akan membunuh kucing itu. Jika atom tidak mereput, kucing itu akan terus hidup.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="opacity-0 story-section" id="section-2">
+                    <h2 class="flex items-center gap-3 text-lg sm:text-xl font-display font-semibold text-white mb-3">
+                        <span class="w-1 h-6 bg-neon rounded-full"></span>
+                        <i data-lucide="infinity" class="w-5 h-5 text-neon"></i>
+                        Keadaan Superposisi (Yin & Yang)
+                    </h2>
+                    <p class="text-sm sm:text-base text-text-muted leading-relaxed text-justify mb-3">
+                        Mengikut hukum fizik kuantum, selagi kotak itu tidak dibuka dan diperhatikan, atom radioaktif itu berada dalam keadaan 
+                        <span class="text-neon font-bold">Superposisi</span> — ia mereput dan tidak mereput pada masa yang sama.
+                    </p>
+                    <p class="text-sm sm:text-base text-text-muted leading-relaxed text-justify">
+                        Oleh kerana nasib kucing terikat secara mutlak (<em>entangled</em>) dengan keadaan atom tersebut, ini bermakna secara matematik, 
+                        <span class="text-red-400 font-bold animate-pulse">kucing itu hidup dan mati secara serentak</span> 
+                        selagi pemerhati dari luar tidak membuka kotak tersebut.
+                    </p>
+                </div>
+
+                <div class="opacity-0 story-section pt-6 border-t border-gray-800/30" id="section-3">
+                    <h2 class="flex items-center gap-3 text-lg sm:text-xl font-display font-semibold text-white mb-3">
+                        <span class="w-1 h-6 bg-neon rounded-full"></span>
+                        <i data-lucide="link" class="w-5 h-5 text-neon"></i>
+                        Hubungan Dengan Schrödinger Hash
+                    </h2>
+                    <p class="text-sm sm:text-base text-text-muted leading-relaxed text-justify mb-3">
+                        Kisah ini bukan tentang haiwan, tetapi tentang pemerhatian. Apabila anda membuka kotak (melihat 
+                        <span class="text-neon font-bold">Hash Kuantum</span> ini), anda telah memaksa alam semesta untuk memilih satu realiti. Anda adalah pemerhati yang meruntuhkan fungsi gelombang tersebut.
+                    </p>
+                    <p class="text-sm sm:text-base text-text-muted leading-relaxed text-justify mb-3">
+                        Identiti dan akses anda berada dalam keadaan kebarangkalian 
+                        <span class="text-neon font-bold">(<em>probability cloud</em>)</span>. Apabila anda menekan butang untuk menjana 
+                        <span class="text-neon font-bold">State Vector</span>, anda sebenarnya memasukkan data ke dalam 'kotak keluli'.
+                    </p>
+                    <p class="text-sm sm:text-base text-red-400 font-bold leading-relaxed text-justify">
+                        Jika data adalah dari sumber yang sama maka kesepakatan Entanglement dicapai oleh padanan serasi kedua-dua Quantum hash bell state. Maka akses login dibenarkan oleh hukum murni fizik matematik Quantum Entanglement sejati: ("Akses Dibenarkan!")
+                    </p>
+                </div>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="text-center mt-10 opacity-0" id="logout-section">
+                <button onclick="window.location.href='index.html'" class="group relative inline-flex items-center gap-2 px-8 py-3 bg-transparent border-2 border-neon text-neon font-display font-bold uppercase tracking-wider rounded-full overflow-hidden transition-all duration-300 hover:text-dark-bg hover:shadow-[0_0_30px_rgba(0,255,102,0.5)]">
+                    <span class="absolute inset-0 bg-neon transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+                    <i data-lucide="log-out" class="w-5 h-5 relative z-10"></i>
+                    <span class="relative z-10">Tutup Kotak (Log Keluar)</span>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-10 pt-6 border-t border-gray-800/30 text-center opacity-0" id="footer-section">
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    <i data-lucide="globe" class="w-4 h-4 text-neon-dim"></i>
+                    <span class="text-xs text-text-muted">Sistem Penceritaan Web3 & Identiti Kuantum</span>
+                </div>
+                <p class="text-xs text-text-muted mb-1">
+                    Dibangunkan oleh <span class="text-neon font-semibold">Zulkarnain</span> — pelajar SMK Rantau Panjang, Klang, Selangor, Malaysia 🇲🇾
+                </p>
+                <p class="text-xs text-text-muted">
+                    Lokasi Pelayan Utama: Zon Waktu +08:00 | Waktu Pelayan: 
+                    <span id="server-time" class="text-neon font-bold">--:--:--</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== INIT LUCIDE ICONS ====================
+        lucide.createIcons();
+
+        // ==================== FLOATING PARTICLES ====================
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 30;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    width: ${Math.random() * 4 + 2}px;
+                    height: ${Math.random() * 4 + 2}px;
+                    background: rgba(0, 255, 102, ${Math.random() * 0.4 + 0.1});
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    box-shadow: 0 0 ${Math.random() * 10 + 5}px rgba(0, 255, 102, 0.3);
+                `;
+                container.appendChild(particle);
+                gsap.to(particle, {
+                    x: (Math.random() - 0.5) * 200,
+                    y: (Math.random() - 0.5) * 200,
+                    opacity: Math.random() * 0.6 + 0.2,
+                    duration: Math.random() * 5 + 5,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                    delay: Math.random() * 2,
+                });
+            }
+        }
+        createParticles();
+
+        // ==================== MAIN ANIMATION ====================
+        function playEntryAnimation() {
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+            tl.to("#main-panel", { opacity: 1, duration: 0.6 });
+            tl.fromTo("#telemetry-grid > div", { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.4)" }, "-=0.2");
+            tl.to("#warning-area", { opacity: 1, duration: 0.4 }, "-=0.1");
+            tl.fromTo("#title-section", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" }, "-=0.1");
+            tl.fromTo(".story-section", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.15 }, "-=0.3");
+            tl.fromTo("#quantum-box", { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.2)" }, "-=0.4");
+            tl.fromTo("#logout-section", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, "-=0.1");
+            tl.to("#footer-section", { opacity: 1, duration: 0.5 }, "-=0.1");
+            lucide.createIcons();
+        }
+
+        // ==================== BLOCK SYSTEM ====================
+        let countdownInterval = null;
+
+        function showBlockOverlay(title, message, reason, countdownSeconds = 5, redirectUrl = 'index.html') {
+            const overlay = document.getElementById('block-overlay');
+            document.getElementById('block-title').innerText = title;
+            document.getElementById('block-message').innerText = message;
+            document.getElementById('block-reason').innerText = `Sebab: ${reason}`;
+            document.getElementById('countdown-timer').innerText = countdownSeconds;
+            document.getElementById('status-dot').classList.remove('bg-neon');
+            document.getElementById('status-dot').classList.add('bg-red-500');
+            document.getElementById('status-text').innerText = 'DISCONNECTED';
+            document.getElementById('status-text').classList.remove('text-neon');
+            document.getElementById('status-text').classList.add('text-red-400');
+            overlay.classList.remove('hidden');
+            gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+            gsap.fromTo('#block-card', { scale: 0.8, opacity: 0, y: 50 }, { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.4)", delay: 0.2 });
+            lucide.createIcons();
+
+            let remaining = countdownSeconds;
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                remaining--;
+                document.getElementById('countdown-timer').innerText = remaining;
+                gsap.fromTo('#countdown-timer', { scale: 1.2 }, { scale: 1, duration: 0.3 });
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    gsap.to(overlay, { backgroundColor: 'rgba(255, 68, 68, 0.3)', duration: 0.3, onComplete: () => { window.location.href = redirectUrl; } });
+                }
+            }, 1000);
+            document.getElementById('main-panel').style.pointerEvents = 'none';
+            document.getElementById('main-panel').style.filter = 'blur(4px)';
+        }
+
+        // ==================== HELPERS ====================
+        function maskUserId(userId) {
+            if (!userId || userId === "NULL") return userId;
+            if (userId.length <= 8) return userId;
+            return userId.substring(0, 4) + "..." + userId.substring(userId.length - 4);
+        }
+
+        function showWarning(message, isError = true) {
+            const warningArea = document.getElementById('warning-area');
+            const bgClass = isError ? 'bg-red-500/10 border-red-500/30' : 'bg-neon/10 border-neon/30';
+            const textClass = isError ? 'text-red-400' : 'text-neon';
+            const iconName = isError ? 'alert-triangle' : 'info';
+            warningArea.innerHTML = `<div class="${bgClass} border rounded-xl p-4 flex items-start gap-3"><i data-lucide="${iconName}" class="w-5 h-5 ${textClass} flex-shrink-0 mt-0.5"></i><span class="text-sm ${textClass}">${message}</span></div>`;
+            lucide.createIcons();
+            if (isError) { gsap.fromTo(warningArea.querySelector('div'), { x: -10 }, { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds) return "N/A";
+            if (seconds < 60) return `${seconds} saat`;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins} minit ${secs} saat`;
+        }
+
+        // ==================== PARSE EXTRA DATA ====================
+        function parseExtraData() {
+            const params = new URLSearchParams(window.location.search);
+            const dataParam = params.get('data');
+            if (!dataParam) { console.log("📦 Tiada extra data"); return null; }
+            try { const decoded = JSON.parse(atob(dataParam)); console.log("📦 Extra data:", decoded); return decoded; }
+            catch (e) { console.error("❌ Parse error:", e.message); return null; }
+        }
+
+        function injectExtraDataToUI(extraData) {
+            if (!extraData) return;
+
+            // 1. Quantum Matrix ID
+            if (extraData.qid) {
+                const qidEl = document.getElementById('qid-display');
+                if (qidEl) qidEl.innerText = extraData.qid;
+            }
+
+            // 2. Access Count
+            if (extraData.cnt) {
+                const cntEl = document.getElementById('access-count');
+                if (cntEl) cntEl.innerText = `#${extraData.cnt}`;
+            }
+
+            // 3. State Qubit
+            if (extraData.qstate) {
+                const qubitsEl = document.getElementById('qubits');
+                if (qubitsEl && (qubitsEl.innerText === '---' || qubitsEl.innerText.includes('?'))) {
+                    qubitsEl.innerText = extraData.qstate;
+                }
+            }
+
+            // 4. Hash Preview
+            if (extraData.hashPreview) {
+                const hashEl = document.getElementById('hash');
+                if (hashEl && hashEl.innerText === '---') {
+                    hashEl.innerText = extraData.hashPreview;
+                }
+            }
+
+            // 5. TTL Warning
+            if (extraData.ttl && extraData.ttl > 0 && extraData.ttl < 600) {
+                showWarning(`⏱️ Token sah untuk ${formatTime(extraData.ttl)} lagi.`, false);
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        // ==================== MAIN AUTH LOGIC ====================
+        function validateAccess() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+
+            if (!token) { showBlockOverlay('AKSES DISEKAT', 'Anda tidak mempunyai token pengesahan yang sah.', 'Tiada token dalam URL parameter.'); return false; }
+
+            try {
+                const decodedStr = atob(token);
+                const data = JSON.parse(decodedStr);
+                const userId = data.u || null;
+                const hash = data.h || null;
+                const tokenId = data.tid || null;
+                const expiry = data.exp || null;
+
+                if (!userId || userId === "NULL") { showBlockOverlay('IDENTITI TIDAK SAH', 'Token tidak mengandungi ID pengguna yang sah.', 'ID pengguna tiada atau NULL.'); return false; }
+                if (!hash || hash === "0000000000000000") { showBlockOverlay('HASH KUANTUM TIDAK SAH', 'Token tidak mengandungi Quantum Hash yang sah.', 'Hash tiada atau bernilai sifar.'); return false; }
+
+                if (tokenId) {
+                    const usedKey = `used_quantum_token_${tokenId}`;
+                    if (sessionStorage.getItem(usedKey)) { showBlockOverlay('TOKEN SUDAH DIGUNAKAN', 'Token ini telah digunakan sebelum ini.', 'Token sekali pakai telah diaktifkan.'); return false; }
+                    sessionStorage.setItem(usedKey, 'true');
+                }
+
+                if (expiry) {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    if (currentTime > expiry) { showBlockOverlay('TOKEN TAMAT TEMPOH', 'Masa sah token telah luput.', `Token luput pada: ${new Date(expiry * 1000).toLocaleTimeString('ms-MY')}`); return false; }
+                    const remaining = expiry - currentTime;
+                    if (remaining > 0 && remaining < 600) { showWarning(`⏱️ Token sah untuk ${formatTime(remaining)} lagi.`, false); }
+                }
+
+                // Papar data asas
+                document.getElementById('uid').innerText = maskUserId(userId);
+                document.getElementById('hash').innerText = hash.substring(0, 16) + "...";
+                const qState = hash.substring(0, 8).split('').map(c => (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩').join(' ');
+                document.getElementById('qubits').innerText = qState;
+
+                return true;
+            } catch (error) {
+                console.error("Gagal mendekrip token:", error);
+                showBlockOverlay('TOKEN ROSAK', 'Struktur token tidak sah atau rosak.', 'Ralat dekripsi: ' + error.message);
+                return false;
+            }
+        }
+
+        // ==================== INIT ====================
+        window.addEventListener('load', () => {
+            const extraData = parseExtraData();
+            const isValid = validateAccess();
+
+            if (isValid) {
+                injectExtraDataToUI(extraData);
+                playEntryAnimation();
+            }
+
+            updateServerTime();
+            setInterval(updateServerTime, 1000);
+        });
+
+        function updateServerTime() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Kuala_Lumpur', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const timeString = new Intl.DateTimeFormat('ms-MY', options).format(now);
+            const serverTimeEl = document.getElementById('server-time');
+            if (serverTimeEl) serverTimeEl.innerText = timeString;
+        }
+
+        window.addEventListener('popstate', () => {
+            const overlay = document.getElementById('block-overlay');
+            if (!overlay.classList.contains('hidden')) { window.location.href = 'index.html'; }
+        });
+    </script>
+</body>
+</html>
