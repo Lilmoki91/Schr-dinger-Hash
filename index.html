@@ -115,7 +115,6 @@
     
     // Papar data token dalam panel
     function displayTokenData(data) {
-        // Quantum Matrix ID (kekal untuk user)
         if (data.qid) {
             document.getElementById('displayQuantumMatrixId').innerText = data.qid;
             state.quantumMatrixId = data.qid;
@@ -128,15 +127,12 @@
         document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ? ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
         document.getElementById('displaySeed').innerText = data.s ? data.s.substring(0, 16) + "..." : "-";
         
-        // State 8-Qubit visual dari hash (untuk paparan sahaja)
         if (data.h) {
             const qState = data.h.substring(0, 8).split('').map(c => 
                 (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
             ).join(' ');
             document.getElementById('displayQubits').innerText = qState;
             document.getElementById('displayHash').innerText = data.h.substring(0, 16) + "...";
-            
-            // Simpan untuk rujukan
             state.qStateVisual = qState;
         }
         
@@ -144,7 +140,7 @@
         state.ttlSeconds = data.ttl;
     }
     
-    // Semak token used (server-side simulation)
+    // Semak token used
     async function isTokenUsedOnServer(tokenId) {
         const serverKey = `server_used_${tokenId}`;
         return localStorage.getItem(serverKey) === 'true';
@@ -233,9 +229,23 @@
             document.getElementById('status-text').innerText = "✨ Portal Berdaulat Dibuka ✨";
             document.getElementById('status-text').className = "success";
             
+            // ========== REDIRECT DENGAN EXTRA DATA ==========
             setTimeout(() => {
-                window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
+                const extraData = {
+                    qid: state.quantumMatrixId || null,
+                    cnt: state.accessCount || null,
+                    ttl: state.ttlSeconds || null,
+                    qstate: state.qStateVisual || null,
+                    hashPreview: state.remoteHash ? state.remoteHash.substring(0, 16) + "..." : null,
+                };
+                
+                const dataParam = btoa(JSON.stringify(extraData));
+                const url = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}&data=${encodeURIComponent(dataParam)}`;
+                
+                console.log("🚀 Redirect ke:", url);
+                window.location.href = url;
             }, 2000);
+            // =================================================
         } else {
             log("❌ RALAT: HASH TIDAK PADAN", "error");
             document.getElementById('status-text').innerText = "⛔ Akses Ditolak.";
@@ -253,7 +263,6 @@
             try {
                 const data = JSON.parse(atob(token));
                 
-                // Semak expiry
                 const currentTime = Math.floor(Date.now() / 1000);
                 if (data.exp && currentTime > data.exp) {
                     document.getElementById('init-section').classList.remove('hidden');
@@ -272,19 +281,15 @@
                 state.tokenId = data.tid || null;
                 state.quantumMatrixId = data.qid || null;
                 
-                // Simpan data tambahan dari token (jika ada)
                 if (data.cnt) state.accessCount = data.cnt;
                 if (data.ttl) state.ttlSeconds = data.ttl;
                 
-                // Papar data token dalam panel
                 displayTokenData(data);
                 
-                // Sembunyi init, tunjuk data + login section
                 document.getElementById('init-section').classList.add('hidden');
                 document.getElementById('data-section').classList.remove('hidden');
                 document.getElementById('login-section').classList.remove('hidden');
                 
-                // Suntik widget Telegram
                 const widgetContainer = document.getElementById('telegram-login');
                 widgetContainer.innerHTML = '';
                 const script = document.createElement('script');
