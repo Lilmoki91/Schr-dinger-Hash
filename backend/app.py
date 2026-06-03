@@ -20,12 +20,8 @@ RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL")
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# ======================= TAMBAHAN BARU =======================
-# 1. Fibonacci TTL
-# 2. Sekali pakai (tracking token)
-# =============================================================
 user_access_count = {}
-used_tokens = set()  # Track token yang sudah digunakan
+used_tokens = set()
 
 def get_fibonacci_ttl(count):
     fib = [1, 1, 2, 3, 5, 8, 13, 21]
@@ -62,15 +58,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
     await update.message.reply_text("Sistem Kedaulatan Kuantum Aktif. Sila sahkan entiti fizikal.", reply_markup=reply_markup)
 
-# ========== TAMBAHAN: HANDLER CHECK TOKEN ==========
-async def check_token(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Semak sama ada token_id sudah digunakan"""
+async def mark_used(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Tandakan token_id sebagai sudah digunakan"""
     tid = context.args[0] if context.args else None
-    if tid and tid in used_tokens:
-        await update.message.reply_text("used")
+    if tid:
+        used_tokens.add(tid)
+        await update.message.reply_text("marked")
+        logging.info(f"Token {tid} marked as used")
     else:
-        await update.message.reply_text("ok")
-# ===================================================
+        await update.message.reply_text("error: missing token_id")
 
 async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     contact = update.message.contact
@@ -85,7 +81,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     user_access_count[user_id] = count
     ttl_seconds = get_fibonacci_ttl(count)
     expiry = int(time.time()) + ttl_seconds
-    token_id = secrets.token_hex(16)  # Untuk "sekali pakai"
+    token_id = secrets.token_hex(16)
     # =======================================================
 
     seed_hex = secrets.token_hex(32)
@@ -93,15 +89,14 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     
     q_state_visual = " ".join(["|0⟩" if int(char, 16) % 2 == 0 else "|1⟩" for char in quantum_hash[:8]])
     
-    # ========== TOKEN DENGAN TAMBAHAN ==========
     token_data = {
         "u": user_id,
         "s": seed_hex,
         "h": quantum_hash,
-        "exp": expiry,      # TTL Fibonacci
-        "tid": token_id     # Untuk sekali pakai
+        "exp": expiry,
+        "tid": token_id
     }
-    # ===========================================
+    
     json_str = json.dumps(token_data)
     token_bytes = base64.b64encode(json_str.encode("utf-8"))
     token_safe = urllib.parse.quote(token_bytes.decode("utf-8"))
@@ -128,7 +123,7 @@ def main() -> None:
         
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("check", check_token))  # <-- TAMBAH HANDLER
+    application.add_handler(CommandHandler("mark", mark_used))  # ✅ Sekarang di dalam main()
     application.add_handler(MessageHandler(filters.CONTACT, handle_contact))
     
     if RENDER_EXTERNAL_URL:
