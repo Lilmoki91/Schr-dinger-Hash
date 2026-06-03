@@ -62,6 +62,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
     await update.message.reply_text("Sistem Kedaulatan Kuantum Aktif. Sila sahkan entiti fizikal.", reply_markup=reply_markup)
 
+# ========== TAMBAHAN: HANDLER CHECK TOKEN ==========
+async def check_token(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Semak sama ada token_id sudah digunakan"""
+    tid = context.args[0] if context.args else None
+    if tid and tid in used_tokens:
+        await update.message.reply_text("used")
+    else:
+        await update.message.reply_text("ok")
+# ===================================================
+
 async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     contact = update.message.contact
     user_id = str(update.effective_user.id)
@@ -118,6 +128,7 @@ def main() -> None:
         
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("check", check_token))  # <-- TAMBAH HANDLER
     application.add_handler(MessageHandler(filters.CONTACT, handle_contact))
     
     if RENDER_EXTERNAL_URL:
