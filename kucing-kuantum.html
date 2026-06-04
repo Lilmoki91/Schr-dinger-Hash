@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkib Rahsia | Kucing Kuantum</title>
+    <style>
+        :root { --neon-lime: #00ff66; --dark-bg: #05070a; --panel-bg: #0d1117; --text-main: #c9d1d9; --text-muted: #8b949e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: var(--dark-bg); color: var(--text-main); line-height: 1.6; padding: 20px; background-image: linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px); background-size: 20px 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: var(--panel-bg); border: 1px solid #1f293d; border-radius: 12px; padding: 40px; box-shadow: 0 0 30px rgba(0, 255, 102, 0.05); position: relative; overflow: hidden; }
+        h1 { color: var(--neon-lime); font-size: 2.2em; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4); text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 0.9em; margin-bottom: 40px; border-bottom: 1px dashed #30363d; padding-bottom: 20px; }
+        .story-section { margin-bottom: 30px; }
+        h2 { color: #fff; font-size: 1.3em; margin-bottom: 15px; display: inline-block; border-left: 3px solid var(--neon-lime); padding-left: 10px; }
+        p { margin-bottom: 15px; text-align: justify; }
+        .quantum-box { background: #010409; border: 1px solid var(--neon-lime); border-radius: 8px; padding: 20px; margin: 30px 0; position: relative; box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.05); }
+        .quantum-box::before { content: "KOTAK KELULI SCHRÖDINGER"; position: absolute; top: -10px; left: 20px; background: var(--dark-bg); padding: 0 10px; color: var(--neon-lime); font-size: 0.8em; font-weight: bold; }
+        .highlight { color: var(--neon-lime); font-weight: bold; }
+        .alert { color: #ff4444; font-weight: bold; }
+        .warning { color: #ffaa00; font-weight: bold; }
+        .logout-btn { display: block; width: 200px; margin: 40px auto 0; padding: 12px; background: transparent; color: var(--neon-lime); border: 1px solid var(--neon-lime); text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; transition: all 0.3s; cursor: pointer; }
+        .logout-btn:hover { background: var(--neon-lime); color: var(--dark-bg); box-shadow: 0 0 15px rgba(0, 255, 102, 0.4); }
+        .footer { margin-top: 40px; text-align: center; font-size: 0.8em; color: lime; }
+        .typewriter { overflow: hidden; white-space: nowrap; margin: 0 auto; letter-spacing: .1em; animation: typing 3.5s steps(40, end); }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        
+        .telemetry-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .telemetry-item {
+            padding: 5px 0;
+        }
+        .tele-label {
+            display: block;
+            color: #8b949e;
+            font-size: 11px;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .tele-value {
+            display: block;
+            color: #00ffcc;
+            font-size: 13px;
+            font-weight: bold;
+            word-break: break-all;
+            white-space: normal;
+            font-family: monospace;
+        }
+        .token-expired { 
+            background: rgba(255, 68, 68, 0.2);        
+            border: 1px solid #ff4444; 
+            border-radius: 8px; 
+            padding: 10px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="telemetry-panel">
+            <div class="telemetry-item">
+                <span class="tele-label">👤 ID PENGGUNA:</span>
+                <span id="uid" class="tele-value">---</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="tele-label">⏱️ MASA RUNTUHAN:</span>
+                <span id="time" class="tele-value">---</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="tele-label">🌀 QUANTUM MATRIX ID:</span>
+                <span id="qmid" class="tele-value">---</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="tele-label">💻 STATE 8-QUBIT:</span>
+                <span id="qubits" class="tele-value">---</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="tele-label">🔑 QUANTUM HASH:</span>
+                <span id="hash" class="tele-value">---</span>
+            </div>
+        </div>
+
+        <div id="warning-area"></div>
+
+        <h1>Lagenda Kucing Kuantum</h1>
+        <div class="subtitle typewriter">Eksperimen Minda Erwin Schrödinger (1935)</div>
+
+        <div class="story-section">
+            <h2>Paradoks Realiti</h2>
+            <p>Pada tahun 1935, ahli fizik <span class="highlight">Erwin Schrödinger</span> mengusulkan sebuah eksperimen minda yang radikal untuk mengkritik Interpretasi Copenhagen dalam mekanik kuantum. Beliau membayangkan sebuah senario yang pelik tetapi menakjubkan yang kini menjadi asas kepada kefahaman pengkomputeran kuantum moden.</p>
+        </div>
+
+        <div class="quantum-box">
+            <p>Bayangkan seekor kucing dimasukkan ke dalam sebuah kotak keluli yang tertutup rapat. Di dalam kotak tersebut, terdapat sebuah mekanisma maut: <strong>sebutir atom radioaktif, alat pengesan radiasi (Geiger counter), sebuah tukul, dan kelalang berisi gas beracun.</strong></p>
+            <p>Jika atom tersebut mereput (decay), pengesan akan mencetuskannya, tukul akan memecahkan kelalang, dan gas beracun akan membunuh kucing itu. Jika atom tidak mereput, kucing itu akan terus hidup.</p>
+        </div>
+
+        <div class="story-section">
+            <h2>Keadaan Superposisi (Yin & Yang)</h2>
+            <p>Mengikut hukum fizik kuantum, selagi kotak itu tidak dibuka dan diperhatikan, atom radioaktif itu berada dalam keadaan <span class="highlight">Superposisi</span>—ia mereput dan tidak mereput pada masa yang sama. </p>
+            <p>Oleh kerana nasib kucing terikat secara mutlak (*entangled*) dengan keadaan atom tersebut, ini bermakna secara matematik, <span class="alert">kucing itu hidup dan mati secara serentak</span> selagi pemerhati dari luar tidak membuka kotak tersebut.</p>
+        </div>
+
+        <div class="story-section" style="border-top: 1px solid #1f293d; padding-top: 20px; margin-top: 30px;">
+            <h2>Hubungan Dengan Schrödinger Hash</h2>
+            <p>Kisah ini bukan tentang haiwan, tetapi tentang pemerhatian. Apabila anda membuka kotak (melihat <span class="highlight">Hash Kuantum</span> ini), anda telah memaksa alam semesta untuk memilih satu realiti. Anda adalah pemerhati yang meruntuhkan fungsi gelombang tersebut.</p>
+            <p>Identiti dan akses anda berada dalam keadaan kebarangkalian <span class="highlight">(*probability cloud*).</span> Apabila anda menekan butang untuk menjana <span class="highlight">State Vector</span>, anda sebenarnya memasukkan data ke dalam 'kotak keluli'. Apabila Bot Telegram mencetak Quantum Hash bell state, webapps akan bertindak sebagai 'Entangle' memadankan Quantum hash bell state Bot Telegram, <span class="alert">Jika data adalah dari sumber yang sama maka kesepakatan Entanglement dicapai oleh padanan serasi kedua-dua Quantum hash bell state. maka akses login dibenarkan oleh hukum murni fizik matematik Quantum Entanglement sejati: ("Akses Dibenarkan!")</span></p>
+        </div>
+
+        <button class="logout-btn" onclick="window.location.href='index.html'">TUTUP KOTAK (LOG KELUAR)</button>
+
+        <div class="footer">
+            • Sistem Penceritaan Web3 & Identiti Kuantum <br>
+            • Dibangunkan oleh Zulkarnain pelajar sekolah smk rantau panjang klang selangor Malaysia 🇲🇾<br>
+            • Lokasi Pelayan Utama: Zon Waktu +08:00 | Waktu Pelayan: <span id="server-time">--:--:--</span>
+        </div>
+    </div>
+
+    <script>
+    function maskUserId(userId) {
+        if (!userId || userId === "NULL") return "---";
+        if (userId.length <= 8) return userId;
+        return userId.substring(0, 4) + "..." + userId.substring(userId.length - 4);
+    }
+
+    function showWarning(message, isError = true) {
+        const warningArea = document.getElementById('warning-area');
+        warningArea.innerHTML = `<div class="token-expired" style="background: ${isError ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 255, 102, 0.2)'}; border-color: ${isError ? '#ff4444' : '#00ff66'};">
+            <span style="color: ${isError ? '#ff8888' : '#88ff88'};">⚠️ ${message}</span>
+        </div>`;
+    }
+
+    function updateServerTime() {
+        const now = new Date();
+        const options = { 
+            timeZone: 'Asia/Kuala_Lumpur', 
+            hour12: true, 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        };
+        const timeString = new Intl.DateTimeFormat('ms-MY', options).format(now);
+        const serverTimeEl = document.getElementById('server-time');
+        if (serverTimeEl) serverTimeEl.innerText = timeString;
+    }
+
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        
+        if (token) {
+            try {
+                const decodedStr = atob(token);
+                const data = JSON.parse(decodedStr);
+                
+                const userId = data.u || "NULL";
+                const hash = data.h || "0000000000000000";
+                const qmid = data.qid || "TIADA";
+                const expiry = data.exp || null;
+                
+                // ========== SEMAK EXPIRY (UNTUK TOLAK AKSES, BUKAN UNTUK PAPAR) ==========
+                if (expiry) {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    if (currentTime > expiry) {
+                        showWarning(`Token telah tamat tempoh! Sila jana token baru dari bot.`, true);
+                        document.getElementById('uid').innerText = "TOKEN LUPUT";
+                        document.getElementById('hash').innerText = "SILA JANA SEMULA";
+                        document.getElementById('qmid').innerText = "-";
+                        document.getElementById('qubits').innerText = "|💀⟩ |💀⟩ |💀⟩ |💀⟩ |💀⟩ |💀⟩ |💀⟩ |💀⟩";
+                        document.getElementById('time').innerText = new Date().toLocaleTimeString();
+                        updateServerTime();
+                        setInterval(updateServerTime, 1000);
+                        return;
+                    }
+                }
+                // =========================================
+                
+                // Papar semua data
+                document.getElementById('uid').innerText = maskUserId(userId);
+                document.getElementById('time').innerText = new Date().toLocaleTimeString();
+                document.getElementById('qmid').innerText = qmid;
+                document.getElementById('hash').innerText = hash.substring(0, 16) + "...";
+                
+                // Visualisasi state qubit dari hash
+                const qState = hash.substring(0, 8).split('').map(c => 
+                    (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
+                ).join(' ');
+                document.getElementById('qubits').innerText = qState;
+
+            } catch (error) {
+                console.error("Gagal mendekrip token:", error);
+                document.getElementById('uid').innerText = "RALAT TOKEN";
+                document.getElementById('time').innerText = new Date().toLocaleTimeString();
+                document.getElementById('qmid').innerText = "RALAT";
+                document.getElementById('hash').innerText = "STRUKTUR ROSAK";
+                document.getElementById('qubits').innerText = "UNSTABLE STATE";
+                showWarning("Token rosak atau tidak sah! Sila jana token baru dari bot.", true);
+            }
+        } else {
+            document.getElementById('uid').innerText = "TIADA TOKEN (DISEKAT)";
+            document.getElementById('time').innerText = new Date().toLocaleTimeString();
+            document.getElementById('qmid').innerText = "-";
+            document.getElementById('hash').innerText = "SILA LALUI GERBANG UTAMA";
+            document.getElementById('qubits').innerText = "|?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩ |?⟩";
+            showWarning("Akses langsung tidak dibenarkan. Sila gunakan pautan dari bot Telegram.", true);
+        }
+
+        updateServerTime();
+        setInterval(updateServerTime, 1000);
+    }
+    </script>
+</body>
+</html>
