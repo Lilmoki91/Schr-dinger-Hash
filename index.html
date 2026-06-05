@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Identity Gate | Entanglement ⚛️🔗⚛️</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #02050c;
+            color: #00ffcc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ========== THREE.JS CANVAS BACKGROUND ========== */
+        #three-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            /* Canvas tidak block interaksi UI */
+        }
+
+        /* ========== OVERLAY GRADIENT (supaya text readable) ========== */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(2, 5, 12, 0.5) 0%, rgba(2, 5, 12, 0.85) 70%),
+                radial-gradient(ellipse at 30% 50%, rgba(0, 255, 102, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 50%, rgba(0, 255, 102, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ========== MAIN GATE PANEL ========== */
+        .gate-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(11, 17, 32, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 550px;
+            width: 92%;
+            text-align: center;
+            box-shadow:
+                0 0 60px rgba(0, 255, 102, 0.08),
+                0 0 120px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            animation: panelEntry 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+
+        @keyframes panelEntry {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.94);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .gate-container h1 {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 20px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #00ff66;
+            text-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+
+        .gate-container .subtitle {
+            font-size: 9px;
+            color: #8899aa;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: rgba(0, 255, 102, 0.1);
+            color: #00ff66;
+            font-weight: bold;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            text-decoration: none;
+            border-radius: 30px;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: #00ff66;
+            color: #050914;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.4);
+            border-color: #00ff66;
+        }
+
+        .btn-secondary {
+            background: rgba(51, 51, 51, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #aaa;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(51, 51, 51, 0.8);
+            color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            border-color: #00ffcc;
+        }
+
+        .console {
+            background: rgba(0, 0, 0, 0.6);
+            color: #0f0;
+            padding: 15px;
+            font-size: 11px;
+            text-align: left;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 102, 0.2);
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.6;
+        }
+
+        .error {
+            color: #ff3333;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .success {
+            color: #00ff66;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .telegram-login {
+            min-height: 50px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .warning {
+            color: #ffaa00;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+
+        .data-panel {
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 11px;
+        }
+
+        .data-panel .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 10px;
+        }
+
+        .data-panel .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #8899aa;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        .value {
+            color: #00ffcc;
+            font-weight: bold;
+            text-align: right;
+            word-break: break-all;
+            font-size: 11px;
+        }
+
+        .highlight {
+            color: #00ff66;
+            background: rgba(0, 255, 102, 0.08);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* Label kiri & kanan untuk kotak */
+        .label-box {
+            position: fixed;
+            top: 12%;
+            color: #00ff66;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            z-index: 5;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+            pointer-events: none;
+        }
+        .label-left {
+            left: 6%;
+        }
+        .label-right {
+            right: 6%;
+        }
+        .label-box span {
+            font-size: 7px;
+            display: block;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        /* Info bar */
+        .info-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff66;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-align: center;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 102, 0.25);
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .gate-container {
+                padding: 25px 16px;
+            }
+            .gate-container h1 {
+                font-size: 16px;
+                letter-spacing: 1px;
+            }
+            .label-box {
+                font-size: 7px;
+                top: 8%;
+            }
+            .label-left {
+                left: 3%;
+            }
+            .label-right {
+                right: 3%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Canvas Background -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Overlay gelap supaya text readable -->
+    <div class="bg-overlay"></div>
+
+    <!-- Label Kotak -->
+    <div class="label-box label-left">⚛️ Kotak A<span>Superposisi</span></div>
+    <div class="label-box label-right">⚛️ Kotak B<span>Superposisi</span></div>
+
+    <!-- Info Bar -->
+    <div class="info-bar">🔗 QUANTUM ENTANGLEMENT | Schrödinger Dual-Box</div>
+
+    <!-- ========== GATE PANEL ========== -->
+    <div class="gate-container" id="gate-panel">
+        <h1>⚛️ Quantum Identity Gate</h1>
+        <div class="subtitle">Entanglement Verification Protocol</div>
+
+        <!-- SECTION 1: Init / Button Utama -->
+        <div id="init-section">
+            <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">🔐 Jana State Vector (Telegram)</a>
+            <p class="warning">⚠️ Token tamat selepas 30s – 10 minit (Fibonacci TTL)</p>
+        </div>
+
+        <!-- SECTION 2: Paparan Data Token -->
+        <div id="data-section" class="hidden">
+            <div class="data-panel">
+                <div class="row"><span class="label">🌀 Quantum Matrix ID:</span><span id="displayQuantumMatrixId" class="value highlight">-</span></div>
+                <div class="row"><span class="label">👤 User ID:</span><span id="displayUserId" class="value">-</span></div>
+                <div class="row"><span class="label">🔢 Akses ke-:</span><span id="displayAccessCount" class="value">-</span></div>
+                <div class="row"><span class="label">⏱️ Token sah:</span><span id="displayTokenTTL" class="value">-</span></div>
+                <div class="row"><span class="label">🌱 Seed (Dinamic):</span><span id="displaySeed" class="value">-</span></div>
+                <div class="row"><span class="label">💻 State 8-Qubit:</span><span id="displayQubits" class="value">-</span></div>
+                <div class="row"><span class="label">🔑 Hash Kuantum:</span><span id="displayHash" class="value">-</span></div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Login -->
+        <div id="login-section" class="hidden">
+            <p style="font-size:12px; margin-bottom:10px; letter-spacing:1px;">🔐 SAHKAN IDENTITI PEMERHATI</p>
+            <div id="telegram-login" class="telegram-login"></div>
+            <p id="error-msg" class="error hidden"></p>
+            <button id="backToInitBtn" class="btn btn-secondary">⬅ Kembali / Jana Token Baru</button>
+        </div>
+
+        <!-- SECTION 4: Verify -->
+        <div id="verify-section" class="hidden">
+            <p id="status-text" class="status-text">🌀 Menyelaras fungsi gelombang...</p>
+            <div class="console" id="console-log"></div>
+        </div>
+    </div>
+
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- Three.js 3D Scene Script -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ========== SCENE SETUP ==========
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x02050c);
+        scene.fog = new THREE.FogExp2(0x02050c, 0.00015);
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 40);
+        camera.position.set(0, 2.2, 9.5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+
+        // Controls - auto rotate perlahan
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.3;
+        controls.minDistance = 5;
+        controls.maxDistance = 18;
+        controls.target.set(0, 0, 0);
+        controls.enablePan = false;
+
+        // ========== LIGHTING ==========
+        const ambientLight = new THREE.AmbientLight(0x002211, 0.35);
+        scene.add(ambientLight);
+        const mainLight = new THREE.PointLight(0x00ff66, 22, 15);
+        mainLight.position.set(0, 4, 0);
+        scene.add(mainLight);
+        const leftLight = new THREE.PointLight(0x00ffaa, 12, 8);
+        leftLight.position.set(-3, 1, 2);
+        scene.add(leftLight);
+        const rightLight = new THREE.PointLight(0x00ffaa, 12, 8);
+        rightLight.position.set(3, 1, 2);
+        scene.add(rightLight);
+
+        // ========== STARFIELD ==========
+        const starsGeo = new THREE.BufferGeometry();
+        const starCount = 1000;
+        const starPositionsArr = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i += 3) {
+            starPositionsArr[i] = (Math.random() - 0.5) * 30;
+            starPositionsArr[i + 1] = (Math.random() - 0.5) * 20;
+            starPositionsArr[i + 2] = (Math.random() - 0.5) * 20;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositionsArr, 3));
+        const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({
+            color: 0x00ff66,
+            size: 0.018,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+        }));
+        scene.add(stars);
+
+        // ========== GRID FLOOR ==========
+        const gridHelper = new THREE.PolarGridHelper(8, 48, 32, 128, 0x00ff66, 0x00ff66);
+        gridHelper.position.y = -3;
+        scene.add(gridHelper);
+
+        // ========== KOTAK & ATOM FUNCTIONS ==========
+        function createQuantumBox(parentGroup) {
+            const boxGroup = new THREE.Group();
+            const boxGeo = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+            const boxEdges = new THREE.EdgesGeometry(boxGeo);
+            const boxFrame = new THREE.LineSegments(boxEdges,
+                new THREE.LineBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.7 }));
+            boxGroup.add(boxFrame);
+            const boxMesh = new THREE.Mesh(boxGeo, new THREE.MeshPhysicalMaterial({
+                color: 0x00ff66,
+                metalness: 0.05,
+                roughness: 0.2,
+                transparent: true,
+                opacity: 0.08,
+            }));
+            boxGroup.add(boxMesh);
+            const cornerGeo = new THREE.SphereGeometry(0.06, 8, 8);
+            const cornerMat = new THREE.MeshStandardMaterial({ color: 0x00ff66, emissive: 0x00ff66, emissiveIntensity: 1.5 });
+            [
+                [-0.9, -0.9, -0.9],
+                [0.9, -0.9, -0.9],
+                [-0.9, 0.9, -0.9],
+                [0.9, 0.9, -0.9],
+                [-0.9, -0.9, 0.9],
+                [0.9, -0.9, 0.9],
+                [-0.9, 0.9, 0.9],
+                [0.9, 0.9, 0.9]
+            ].forEach(([x, y, z]) => {
+                const corner = new THREE.Mesh(cornerGeo, cornerMat);
+                corner.position.set(x, y, z);
+                boxGroup.add(corner);
+            });
+            parentGroup.add(boxGroup);
+            return boxGroup;
+        }
+
+        function createAtom(parentGroup, colorScheme) {
+            const atomGroup = new THREE.Group();
+            const nucleusGeo = new THREE.SphereGeometry(0.12, 32, 32);
+            const nucleusMat = new THREE.MeshStandardMaterial({
+                color: colorScheme.nucleus,
+                emissive: colorScheme.nucleus,
+                emissiveIntensity: 2,
+                roughness: 0.1,
+                metalness: 0.5,
+            });
+            const nucleus = new THREE.Mesh(nucleusGeo, nucleusMat);
+            atomGroup.add(nucleus);
+            const nGlowGeo = new THREE.SphereGeometry(0.2, 16, 16);
+            const nGlowMat = new THREE.MeshBasicMaterial({
+                color: colorScheme.nucleus,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending,
+            });
+            const nGlow = new THREE.Mesh(nGlowGeo, nGlowMat);
+            atomGroup.add(nGlow);
+
+            const orbitsGroup = new THREE.Group();
+            const orbitColors = [colorScheme.orbit1, colorScheme.orbit2, colorScheme.orbit3];
+            const orbitData = [
+                { radius: 0.5, rotX: 0, rotY: 0, rotZ: 0 },
+                { radius: 0.42, rotX: Math.PI * 0.4, rotY: Math.PI * 0.3, rotZ: 0 },
+                { radius: 0.46, rotX: -Math.PI * 0.35, rotY: -Math.PI * 0.25, rotZ: Math.PI * 0.2 },
+            ];
+            const orbitRefs = [];
+            orbitData.forEach((data, i) => {
+                const ringGroup = new THREE.Group();
+                const torus = new THREE.Mesh(new THREE.TorusGeometry(data.radius, 0.008, 8, 96),
+                    new THREE.MeshStandardMaterial({ color: orbitColors[i], emissive: orbitColors[i], emissiveIntensity: 0.8,
+                        roughness: 0.2 }));
+                ringGroup.add(torus);
+                const glowTorus = new THREE.Mesh(new THREE.TorusGeometry(data.radius, 0.025, 8, 96),
+                    new THREE.MeshBasicMaterial({ color: orbitColors[i], transparent: true, opacity: 0.15,
+                        blending: THREE.AdditiveBlending }));
+                ringGroup.add(glowTorus);
+                ringGroup.rotation.set(data.rotX, data.rotY, data.rotZ);
+                orbitsGroup.add(ringGroup);
+                orbitRefs.push({ group: ringGroup, radius: data.radius, rotation: { x: data.rotX, y: data.rotY, z: data
+                        .rotZ } });
+            });
+            atomGroup.add(orbitsGroup);
+
+            const electronsGroup = new THREE.Group();
+            const electronRefs = [];
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 2; j++) {
+                    const eGroup = new THREE.Group();
+                    const eGeo = new THREE.SphereGeometry(0.04, 16, 16);
+                    const eMat = new THREE.MeshStandardMaterial({ color: orbitColors[i], emissive: orbitColors[i],
+                        emissiveIntensity: 1.5, roughness: 0.1 });
+                    const electron = new THREE.Mesh(eGeo, eMat);
+                    eGroup.add(electron);
+                    const eGlowGeo = new THREE.SphereGeometry(0.07, 8, 8);
+                    const eGlowMat = new THREE.MeshBasicMaterial({ color: orbitColors[i], transparent: true, opacity: 0.3,
+                        blending: THREE.AdditiveBlending });
+                    const eGlow = new THREE.Mesh(eGlowGeo, eGlowMat);
+                    eGroup.add(eGlow);
+                    electronsGroup.add(eGroup);
+                    electronRefs.push({ mesh: eGroup, orbitIndex: i, speed: 0.7 + i * 0.25, offset: j * Math.PI });
+                }
+            }
+            atomGroup.add(electronsGroup);
+            parentGroup.add(atomGroup);
+            return { atomGroup, orbitRefs, electronRefs, nucleus, nGlow };
+        }
+
+        // ========== KOTAK KIRI (Box A) ==========
+        const boxAGroup = new THREE.Group();
+        boxAGroup.position.set(-3, 0, 0);
+        scene.add(boxAGroup);
+        const boxA = createQuantumBox(boxAGroup);
+        const atomAData = createAtom(boxAGroup, { nucleus: 0xff4444, orbit1: 0x00ff66, orbit2: 0x00aaff, orbit3: 0xffaa00 });
+
+        // ========== KOTAK KANAN (Box B) ==========
+        const boxBGroup = new THREE.Group();
+        boxBGroup.position.set(3, 0, 0);
+        scene.add(boxBGroup);
+        const boxB = createQuantumBox(boxBGroup);
+        const atomBData = createAtom(boxBGroup, { nucleus: 0x4488ff, orbit1: 0xff6644, orbit2: 0x44ff88, orbit3: 0xff88cc });
+
+        // ========== ENTANGLEMENT STRING ==========
+        const entanglementGroup = new THREE.Group();
+        scene.add(entanglementGroup);
+        const stringCurve = new THREE.CubicBezierCurve3(
+            new THREE.Vector3(-2.1, 0, 0),
+            new THREE.Vector3(-1, 0.4, 0.3),
+            new THREE.Vector3(1, -0.3, -0.2),
+            new THREE.Vector3(2.1, 0, 0),
+        );
+        const stringGeo = new THREE.TubeGeometry(stringCurve, 64, 0.02, 8, false);
+        const stringMat = new THREE.MeshStandardMaterial({ color: 0x00ff66, emissive: 0x00ff66, emissiveIntensity: 0.8,
+            roughness: 0.2, metalness: 0.4 });
+        const stringMesh = new THREE.Mesh(stringGeo, stringMat);
+        entanglementGroup.add(stringMesh);
+        const stringGlowGeo = new THREE.TubeGeometry(stringCurve, 64, 0.06, 8, false);
+        const stringGlowMat = new THREE.MeshBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.12,
+            blending: THREE.AdditiveBlending });
+        const stringGlow = new THREE.Mesh(stringGlowGeo, stringGlowMat);
+        entanglementGroup.add(stringGlow);
+
+        // Geometric mesh rings
+        const meshGroup = new THREE.Group();
+        entanglementGroup.add(meshGroup);
+        const meshSegments = 20;
+        const meshRadius = 0.15;
+        for (let i = 0; i < meshSegments; i++) {
+            const t = i / (meshSegments - 1);
+            const point = stringCurve.getPointAt(t);
+            const ringGeo = new THREE.TorusGeometry(meshRadius, 0.005, 8, 12);
+            const ringMat = new THREE.MeshStandardMaterial({ color: 0x00ffaa, emissive: 0x00ff66, emissiveIntensity: 0.5,
+                roughness: 0.3, transparent: true, opacity: 0.5 + Math.sin(t * Math.PI) * 0.4 });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.position.copy(point);
+            const tangent = stringCurve.getTangentAt(t).normalize();
+            const quaternion = new THREE.Quaternion();
+            quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+            ring.setRotationFromQuaternion(quaternion);
+            meshGroup.add(ring);
+        }
+
+        // Longitudinal lines
+        const longLinesGroup = new THREE.Group();
+        entanglementGroup.add(longLinesGroup);
+        const lineCount = 6;
+        for (let j = 0; j < lineCount; j++) {
+            const angle = (j / lineCount) * Math.PI * 2;
+            const linePointsArr = [];
+            for (let i = 0; i <= 40; i++) {
+                const t = i / 40;
+                const point = stringCurve.getPointAt(t);
+                const tangent = stringCurve.getTangentAt(t).normalize();
+                const perp = new THREE.Vector3(-tangent.y, tangent.x, 0).normalize();
+                const perp2 = new THREE.Vector3().crossVectors(tangent, perp).normalize();
+                const offset = perp.clone().multiplyScalar(Math.cos(angle) * meshRadius)
+                    .add(perp2.clone().multiplyScalar(Math.sin(angle) * meshRadius));
+                linePointsArr.push(point.clone().add(offset));
+            }
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(linePointsArr);
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.3,
+                blending: THREE.AdditiveBlending });
+            const line = new THREE.Line(lineGeo, lineMat);
+            longLinesGroup.add(line);
+        }
+
+        // Wormhole particles
+        const wormholeGroup = new THREE.Group();
+        entanglementGroup.add(wormholeGroup);
+        const wormholeParticles = [];
+        const wormholeCount = 40;
+        const whGeo = new THREE.SphereGeometry(0.025, 6, 6);
+        for (let i = 0; i < wormholeCount; i++) {
+            const whMat = new THREE.MeshBasicMaterial({ color: 0x00ffaa, transparent: true, opacity: 0.7,
+                blending: THREE.AdditiveBlending });
+            const particle = new THREE.Mesh(whGeo, whMat);
+            wormholeGroup.add(particle);
+            wormholeParticles.push({
+                mesh: particle,
+                t: Math.random(),
+                speed: 0.003 + Math.random() * 0.008,
+                offset: Math.random() * Math.PI * 2,
+                radius: meshRadius * (0.3 + Math.random() * 0.7),
+            });
+        }
+
+        // Sink holes
+        function createSinkHole(position, color) {
+            const sinkGroup = new THREE.Group();
+            sinkGroup.position.copy(position);
+            for (let i = 0; i < 6; i++) {
+                const t = i / 5;
+                const radius = 0.25 * (1 - t * 0.7);
+                const ringGeo = new THREE.TorusGeometry(radius, 0.008, 8, 24);
+                const ringMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.5 - t * 0.4,
+                    blending: THREE.AdditiveBlending });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.position.z = t * 0.4;
+                sinkGroup.add(ring);
+            }
+            const glowGeo = new THREE.SphereGeometry(0.08, 16, 16);
+            const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.4,
+            blending: THREE.AdditiveBlending });
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            sinkGroup.add(glow);
+            return sinkGroup;
+        }
+        const sinkLeft = createSinkHole(new THREE.Vector3(-2.1, 0, 0), 0x00ff66);
+        const sinkRight = createSinkHole(new THREE.Vector3(2.1, 0, 0), 0x00ff66);
+        entanglementGroup.add(sinkLeft);
+        entanglementGroup.add(sinkRight);
+
+        // ========== ANIMATION LOOP ==========
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = performance.now() * 0.001;
+
+            stars.rotation.y += 0.00008;
+            stars.rotation.x += 0.00003;
+
+            // Pulse box corners
+            [boxA, boxB].forEach(box => {
+                box.children.forEach(child => {
+                    if (child.material && child.material.emissiveIntensity !== undefined) {
+                        child.material.emissiveIntensity = 1.5 + Math.sin(elapsedTime * 3) * 0.3;
+                    }
+                });
+            });
+
+            // Atom A electrons
+            atomAData.electronRefs.forEach(e => {
+                const orbit = atomAData.orbitRefs[e.orbitIndex];
+                const angle = elapsedTime * e.speed + e.offset;
+                const pos = new THREE.Vector3(Math.cos(angle) * orbit.radius, 0, Math.sin(angle) * orbit.radius);
+                pos.applyEuler(new THREE.Euler(orbit.rotation.x, orbit.rotation.y, orbit.rotation.z));
+                e.mesh.position.copy(pos);
+            });
+            atomAData.nucleus.scale.setScalar(1 + Math.sin(elapsedTime * 4) * 0.08);
+            atomAData.nGlow.scale.setScalar(1 + Math.sin(elapsedTime * 4) * 0.1);
+
+            // Atom B electrons (phase shifted - entangled)
+            atomBData.electronRefs.forEach(e => {
+                const orbit = atomBData.orbitRefs[e.orbitIndex];
+                const angle = elapsedTime * e.speed + e.offset + Math.PI;
+                const pos = new THREE.Vector3(Math.cos(angle) * orbit.radius, 0, Math.sin(angle) * orbit.radius);
+                pos.applyEuler(new THREE.Euler(orbit.rotation.x, orbit.rotation.y, orbit.rotation.z));
+                e.mesh.position.copy(pos);
+            });
+            atomBData.nucleus.scale.setScalar(1 + Math.cos(elapsedTime * 4) * 0.08);
+            atomBData.nGlow.scale.setScalar(1 + Math.cos(elapsedTime * 4) * 0.1);
+
+            // Entanglement string pulse
+            stringMat.emissiveIntensity = 0.8 + Math.sin(elapsedTime * 5) * 0.3;
+            stringGlowMat.opacity = 0.12 + Math.sin(elapsedTime * 3) * 0.04;
+
+            // Wormhole particles
+            wormholeParticles.forEach(p => {
+                p.t += p.speed;
+                if (p.t > 1) p.t -= 1;
+                if (p.t < 0) p.t += 1;
+                const point = stringCurve.getPointAt(p.t);
+                const tangent = stringCurve.getTangentAt(p.t).normalize();
+                const perp = new THREE.Vector3(-tangent.y, tangent.x, 0).normalize();
+                const perp2 = new THREE.Vector3().crossVectors(tangent, perp).normalize();
+                const spiralAngle = p.t * Math.PI * 8 + elapsedTime * 3 + p.offset;
+                const offset = perp.clone().multiplyScalar(Math.cos(spiralAngle) * p.radius)
+                    .add(perp2.clone().multiplyScalar(Math.sin(spiralAngle) * p.radius));
+                p.mesh.position.copy(point.clone().add(offset));
+                p.mesh.material.opacity = 0.3 + Math.sin(spiralAngle) * 0.2;
+            });
+
+            // Sink holes pulse
+            [sinkLeft, sinkRight].forEach(sink => {
+                sink.children.forEach(child => {
+                    if (child.material && child.material.opacity !== undefined) {
+                        child.material.opacity = 0.3 + Math.sin(elapsedTime * 4) * 0.15;
+                    }
+                });
+            });
+
+            // Orbit rings slow rotation
+            atomAData.orbitRefs.forEach(r => r.group.rotation.z += 0.002);
+            atomBData.orbitRefs.forEach(r => r.group.rotation.z -= 0.002);
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+
+    <!-- ========== GATE LOGIC (FROM ORIGINAL) ========== -->
+    <script>
+        const BOT_USERNAME = "kipidapps_bot";
+
+        let state = {
+            token: null,
+            userIdFromToken: null,
+            seedHex: null,
+            remoteHash: null,
+            tokenId: null,
+            accessCount: null,
+            ttlSeconds: null,
+            qStateVisual: null,
+            quantumMatrixId: null
+        };
+
+        function log(msg, cls = '') {
+            const box = document.getElementById('console-log');
+            if (!box) return;
+            const line = document.createElement('div');
+            line.className = cls;
+            line.innerText = '> ' + msg;
+            box.appendChild(line);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function formatTTL(seconds) {
+            if (!seconds) return "N/A";
+            if (seconds < 60) return `${seconds} saat`;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins} minit ${secs} saat`;
+        }
+
+        function resetToInit() {
+            state = {
+                token: null,
+                userIdFromToken: null,
+                seedHex: null,
+                remoteHash: null,
+                tokenId: null,
+                accessCount: null,
+                ttlSeconds: null,
+                qStateVisual: null,
+                quantumMatrixId: null
+            };
+            document.getElementById('init-section').classList.remove('hidden');
+            document.getElementById('data-section').classList.add('hidden');
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('verify-section').classList.add('hidden');
+            const widgetContainer = document.getElementById('telegram-login');
+            widgetContainer.innerHTML = '';
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.classList.add('hidden');
+            errorMsg.innerText = '';
+        }
+
+        function displayTokenData(data) {
+            if (data.qid) {
+                document.getElementById('displayQuantumMatrixId').innerText = data.qid;
+                state.quantumMatrixId = data.qid;
+            } else {
+                document.getElementById('displayQuantumMatrixId').innerText = "-";
+            }
+            document.getElementById('displayUserId').innerText = data.u || "-";
+            document.getElementById('displayAccessCount').innerText = data.cnt || "-";
+            document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ?
+                ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
+            document.getElementById('displaySeed').innerText = data.s ? data.s.substring(0, 16) + "..." : "-";
+            if (data.h) {
+                const qState = data.h.substring(0, 8).split('').map(c =>
+                    (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩'
+                ).join(' ');
+                document.getElementById('displayQubits').innerText = qState;
+                document.getElementById('displayHash').innerText = data.h.substring(0, 16) + "...";
+                state.qStateVisual = qState;
+            }
+            state.accessCount = data.cnt;
+            state.ttlSeconds = data.ttl;
+        }
+
+        async function isTokenUsedOnServer(tokenId) {
+            return localStorage.getItem(`server_used_${tokenId}`) === 'true';
+        }
+
+        async function markTokenUsedOnServer(tokenId) {
+            localStorage.setItem(`server_used_${tokenId}`, 'true');
+        }
+
+        async function calculateQuantumHash(userIdStr, seedHex) {
+            let bits = new Array(8).fill(0);
+            for (let i = 0; i < 6; i++) bits[i] = parseInt(seedHex.substr(i * 2, 2), 16) % 2;
+            let uid = BigInt(userIdStr);
+            bits[6] = Number(uid % 256n) > 128 ? 1 : 0;
+            bits[7] = Number((uid >> 8n) % 256n) > 128 ? 1 : 0;
+            for (let i = 0; i < 6; i++)
+                if (bits[6] === 1) bits[i] ^= 1;
+            let finalIndex = (bits[0] << 7) | (bits[1] << 6) | (bits[2] << 5) | (bits[3] << 4) | (bits[4] << 3) | (bits[5] <<
+                2) | (bits[6] << 1) | bits[7];
+            let stateList = new Array(256).fill(0);
+            stateList[finalIndex] = 1;
+            let stateStr = JSON.stringify(stateList);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stateStr));
+            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        window.onTelegramAuth = async function(telegramUser) {
+            const loggedInUserId = telegramUser.id.toString();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (!state.userIdFromToken) {
+                errorMsg.innerText = "❌ Tiada token. Sila jana token baru dari bot.";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            if (state.tokenId) {
+                const isUsed = await isTokenUsedOnServer(state.tokenId);
+                if (isUsed) {
+                    errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan! Sila jana baru.";
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                const usedKey = `used_quantum_token_${state.tokenId}`;
+                if (sessionStorage.getItem(usedKey)) {
+                    errorMsg.innerText = "[403 FORBIDDEN] Token sudah pernah digunakan di tab lain!";
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                await markTokenUsedOnServer(state.tokenId);
+                sessionStorage.setItem(usedKey, 'true');
+            }
+
+            if (loggedInUserId !== state.userIdFromToken) {
+                errorMsg.innerText = `[403 FORBIDDEN] Identiti tidak sepadan! ID Anda: ${loggedInUserId}`;
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            errorMsg.classList.add('hidden');
+            document.getElementById('data-section').classList.add('hidden');
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('verify-section').classList.remove('hidden');
+            document.getElementById('console-log').style.display = 'block';
+
+            log(`✅ Identiti disahkan: ${loggedInUserId}`);
+            if (state.quantumMatrixId) log(`🌀 Quantum Matrix ID: ${state.quantumMatrixId}`);
+            if (state.accessCount) log(`📊 Akses ke-: ${state.accessCount}`);
+            if (state.ttlSeconds) log(`⏱️ Token sah: ${formatTTL(state.ttlSeconds)}`);
+            if (state.qStateVisual) log(`💻 State 8-Qubit: ${state.qStateVisual}`);
+            log(`🔑 Hash Kuantum: ${state.remoteHash.substring(0,16)}...`);
+            log("🌀 Membina litar kuantum...");
+
+            const localHash = await calculateQuantumHash(state.userIdFromToken, state.seedHex);
+            log(`🤖 Bot Hash: ${state.remoteHash.substring(0,16)}...`);
+            log(`💻 Local Hash: ${localHash.substring(0,16)}...`);
+
+            if (localHash === state.remoteHash) {
+                log("✅ PADANAN BERJAYA", "success");
+                document.getElementById('status-text').innerText = "✨ Portal Berdaulat Dibuka ✨";
+                document.getElementById('status-text').className = "success";
+                setTimeout(() => {
+                    window.location.href =
+                        `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
+                }, 2000);
+            } else {
+                log("❌ RALAT: HASH TIDAK PADAN", "error");
+                document.getElementById('status-text').innerText = "⛔ Akses Ditolak.";
+                document.getElementById('status-text').className = "error";
+            }
+        };
+
+        window.onload = () => {
+            const token = new URLSearchParams(window.location.search).get('token');
+            const backBtn = document.getElementById('backToInitBtn');
+            if (backBtn) backBtn.addEventListener('click', resetToInit);
+
+            if (token) {
+                try {
+                    const data = JSON.parse(atob(token));
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    if (data.exp && currentTime > data.exp) {
+                        document.getElementById('init-section').classList.remove('hidden');
+                        const warningMsg = document.createElement('p');
+                        warningMsg.className = 'warning';
+                        warningMsg.innerText = '⚠️ Token telah tamat tempoh. Sila jana token baru dari bot.';
+                        document.getElementById('init-section').appendChild(warningMsg);
+                        setTimeout(() => warningMsg.remove(), 5000);
+                        return;
+                    }
+
+                    state.token = token;
+                    state.userIdFromToken = data.u;
+                    state.seedHex = data.s;
+                    state.remoteHash = data.h;
+                    state.tokenId = data.tid || null;
+                    state.quantumMatrixId = data.qid || null;
+                    if (data.cnt) state.accessCount = data.cnt;
+                    if (data.ttl) state.ttlSeconds = data.ttl;
+
+                    displayTokenData(data);
+                    document.getElementById('init-section').classList.add('hidden');
+                    document.getElementById('data-section').classList.remove('hidden');
+                    document.getElementById('login-section').classList.remove('hidden');
+
+                    const widgetContainer = document.getElementById('telegram-login');
+                    widgetContainer.innerHTML = '';
+                    const script = document.createElement('script');
+                    script.async = true;
+                    script.src = "https://telegram.org/js/telegram-widget.js?22";
+                    script.setAttribute('data-telegram-login', BOT_USERNAME);
+                    script.setAttribute('data-size', 'large');
+                    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+                    script.setAttribute('data-request-access', 'write');
+                    widgetContainer.appendChild(script);
+                } catch (err) {
+                    console.error("Ralat:", err.message);
+                    document.getElementById('init-section').classList.remove('hidden');
+                    const errorDiv = document.getElementById('error-msg');
+                    errorDiv.innerText = "Token rosak atau tidak sah. Sila jana token baru dari bot.";
+                    errorDiv.classList.remove('hidden');
+                    setTimeout(() => errorDiv.classList.add('hidden'), 5000);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
