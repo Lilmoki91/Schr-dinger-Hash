@@ -233,11 +233,11 @@ SMK Rantau Panjang, Klang, Selangor. 🇲🇾
 
 ## BONUS
 
-> *"Meski sistem ini hanya meniru cara kerja komputer kuantum, ia boleh dibuktikan dengan hukum fizik matematik kuantum yang sebenar."*
+> *"Meski sistem ini hanya simulasi, meniru cara kerja komputer kuantum, ia boleh dibuktikan dengan hukum fizik matematik kuantum yang sebenar."*
 
-> *"Pada masa depan, sistem ini mampu diintegrasikan dengan API Qiskit Aer — komputer kuantum sebenar dari IBM. Mampu diintegrasikan dengan blockchain sebenar — menjadikan setiap transaksi terpateri dalam lejar yang tak boleh dipadam."*
+> *"Pada masa depan, sistem ini mampu diintegrasikan dengan API Qiskit Aer — komputer kuantum sebenar dari IBM. Mampu diintegrasikan dengan blockchain sebenar — menjadikan setiap data pengguna dan transaksi terpateri dalam lejar yang tak boleh dipadam."*
 
-### "Terima kasih, Tuan-Tuan dan Puan-Puan yang mulia."**
+### "Terima kasih, Tuan-Tuan dan Puan-Puan yang mulia."
 
 > *"Saya membina semua ini... hanya dengan telefon lama arwah ibu saya."*
 
