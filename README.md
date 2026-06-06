@@ -231,6 +231,20 @@ Scammer data adalah mereka yang:
 — **Zulkarnain / Johannes Hadamard**  
 SMK Rantau Panjang, Klang, Selangor. 🇲🇾
 
+## BONUS
+
+> *"Meski sistem ini hanya meniru cara kerja komputer kuantum, ia boleh dibuktikan dengan hukum fizik matematik kuantum yang sebenar."*
+
+> *"Pada masa depan, sistem ini mampu diintegrasikan dengan API Qiskit Aer — komputer kuantum sebenar dari IBM. Mampu diintegrasikan dengan blockchain sebenar — menjadikan setiap transaksi terpateri dalam lejar yang tak boleh dipadam."*
+
+### "Terima kasih, Tuan-Tuan dan Puan-Puan yang mulia."**
+
+> *"Saya membina semua ini... hanya dengan telefon lama arwah ibu saya."*
+
+> *"Dan rakan digital saya — DeepSeek."*
+
+**"Maaf jika sistem ini kelihatan kecil di mata kalian."**
+
 ---
 
 <div align="center">
