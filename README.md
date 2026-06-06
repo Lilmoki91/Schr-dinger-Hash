@@ -226,7 +226,7 @@ Scammer data adalah mereka yang:
 
 **🌱 Projek ini dibuka dengan `Bismillah`, dijalankan dengan `Tawakkal`, ditutup dengan `Alhamdulillah`.**
 
-> *"Hukum murni fizik matematik Quantum Entanglement sejati bukan untuk orang dewasa yang sombong. Ia untuk budak kampung dengan telefon buruk yang tak pernah berhenti belajar."*
+> *"Access is not granted by men, but by the pure laws of physics and mathematics of true Quantum Entanglement."*
 
 — **Zulkarnain / Johannes Hadamard**  
 SMK Rantau Panjang, Klang, Selangor. 🇲🇾
