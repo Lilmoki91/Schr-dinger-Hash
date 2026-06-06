@@ -1,273 +1,248 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="500">
+  
+  <h1>⚛️ Schrödinger Hash</h1>
+  <h3>Quantum Hadamard CIRQ Entanglement Login Simulator</h3>
+  
+  <p>
+    <em>"Akses diberi bukan oleh manusia, tapi oleh hukum murni fizik matematik Quantum Entanglement sejati."</em>
+  </p>
+  
+  <p>
+    <img src="https://img.shields.io/badge/status-active-brightgreen" alt="Status">
+    <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version">
+    <img src="https://img.shields.io/badge/license-educational-orange" alt="License">
+    <img src="https://img.shields.io/badge/made%20in-Malaysia-red" alt="Malaysia">
+  </p>
 </div>
 
-<br>
+---
 
-# Schrödinger Hash  
+## 📚 Tentang Projek Ini
 
-## System Login Simulator Quantum Hadamard CIRQ Entanglement  
+Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selangor, Malaysia**. Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement, decoherence) dengan **sistem pengesahan identiti digital** menggunakan **litar kuantum Cirq 8-Qubit**.
 
-**Diinspirasikan oleh kisah Kucing Kuantum (Erwin Schrödinger, 1935)**  
-
-**“Akses diberi bukan oleh manusia, tapi oleh hukum murni fizik matematik Quantum Entanglement sejati.”**
+### 🎯 Tujuan Asal:
+> Membuktikan bahawa jika dua sistem (Telegram Bot & Laman Web) menerima **data dari sumber identity yang sama**, mereka akan menghasilkan **Quantum Hash yang serasi** — seperti dua zarah yang terikat (*entangled*).
 
 ---
 
-## 📚 Tentang Projek Ini  
-Projek ini dibina oleh pelajar sekolah di **SMK Rantau Panjang, Klang, Selangor**.  
-Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement) dengan **sistem login digital** menggunakan **litar quantum Cirq 8-Qubit**.
+## 🧪 Konsep Kuantum Yang Digunakan
 
-Tujuan asal:  
-> Membuktikan bahawa jika dua sistem (Telegram Bot & Laman Web) menerima **data dari sumber identity yang sama**, mereka akan menghasilkan **Quantum Hash yang serasi** – seperti dua zarah yang terikat (entangled).
+| Konsep | Implementasi |
+|--------|-------------|
+| **Superposisi** | Token wujud dalam state "boleh diakses" sebelum diukur |
+| **Entanglement** | Dua halaman (Gate + Arkib) berkongsi state melalui token yang sama |
+| **Measurement** | Setiap akses = satu "pengukuran" qubit |
+| **Decoherence** | Selepas 2 akses — fungsi gelombang runtuh, token lupus |
+| **No-Cloning Theorem** | Token tidak boleh disalin/diguna lebih dari 2 kali |
 
 ---
 
-## 🔧 Teknologi Yang Digunakan  
-| Komponen | Perincian |
+## 🔧 Teknologi Yang Digunakan
+
+| Komponen | Teknologi |
 |----------|-----------|
-| **Litar Quantum** | Cirq (Google Quantum Framework) – 8 qubit, gate Hadamard & CNOT |
-| **Bot Telegram** | Python + python-telegram-bot |
-| **Laman Web** | HTML, JavaScript, CSS (host di GitHub Pages) |
-| **Hash Matching** | Padanan hash antara Python (backend) dan JavaScript (frontend) |
+| **Litar Kuantum** | Cirq (Google Quantum Framework) — 8 qubit, Hadamard & CNOT gates |
+| **Bot Telegram** | Python + `python-telegram-bot` |
+| **Frontend Gate** | HTML, CSS, JavaScript, Three.js (3D), GSAP (animasi), Lucide Icons |
+| **Frontend Arkib** | Tailwind CSS, GSAP, Lucide Icons |
+| **Hash Matching** | SHA-256 (Python backend + JavaScript frontend) |
+| **Penyimpanan State** | `sessionStorage` (akses count), `localStorage` (fully used flag) |
+| **Hosting** | Cloudflare Pages |
 
 ---
 
-## 🎯 Apa Yang Sistem Ini Boleh Buat (Sekarang)  
-- ✅ Jana Quantum Hash daripada litar Cirq berdasarkan **seed identity** pengguna.  
-- ✅ Padankan hash antara **bot Telegram** dan **laman web** melalui token.  
-- ✅ Paparan "Akses Dibenarkan!" jika hash serasi – analogi "runtuhan fungsi gelombang".  
+## 🎯 Apa Yang Sistem Ini Boleh Buat
+
+- ✅ Jana **Quantum Hash** daripada litar Cirq berdasarkan **seed identity** unik pengguna
+- ✅ Padankan hash antara **Bot Telegram** dan **Laman Web** melalui token URL
+- ✅ **2 akses sahaja** — meniru pengukuran qubit |0⟩ dan |1⟩
+- ✅ **Auto-block** selepas 2 akses — "Decoherence / Gelombang Runtuh"
+- ✅ Visual **3D Quantum Entanglement** — dua atom dalam kotak dengan tali geometri
+- ✅ Paparan **State 8-Qubit** dalam notasi bra-ket Dirac
+- ✅ **Anti-refresh** — token tidak boleh diguna semula selepas halaman ditutup
+- ✅ **Cross-tab blocking** — token yang sama tidak boleh dibuka di tab berbeza
 
 ---
 
-## ❌ Kekurangan (Sistem Versi 1.0)  
-- ❌ **Tiada penyimpanan data user** (login tidak kekal).  
-- ❌ Belum ada sesi (session) atau local storage.  
-- ❌ Destinasi selepas login masih kosong (akan ditambah pada versi akan datang).  
+## 🖼️ Panduan Penggunaan (Screenshot)
 
-*“Seperti kotak kuantum – ia hebat, tapi belum tahu isi di dalamnya.”*
-
----
-
-## 🖼️ Cara-cara akses sistem pengesahan ID litar simulator kuantum entanglement sejati Dewan pustaka CIRQ Tatabahasa Komputer Python + JavaScript Murni
-
-### 1️⃣ Login – Jana State Vector  
-*Klik "Jana State Vector (Telegram)" di laman utama untuk memulakan proses.*
+### 1️⃣ Jana State Vector
+*Klik butang di laman utama untuk memulakan proses.*
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192742.jpg" alt="Langkah 1: Jana State Vector" width="400">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192742.jpg" alt="Jana State Vector" width="400">
+</div>
+
+### 2️⃣ Terima Token dari Bot Telegram
+*Bot akan menghantar ID Pengguna, Seed Dinamik, State 8-Qubit, dan Quantum Hash.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/Screenshot_2026-05-29-19-19-38-707_org.telegram.messenger.jpg" alt="Bot Telegram" width="400">
+</div>
+
+### 3️⃣ Pengesahan Identiti — Padanan Hash
+*Gate memaparkan state vector dan memadankan hash dari Cirq (Python) dengan hash tempatan (JavaScript).*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192612.jpg" alt="Padanan Hash" width="400">
+</div>
+
+### 4️⃣ Akses Dibenarkan — Portal Kucing Kuantum
+*Selepas hash serasi, pengguna dihalakan ke portal arkib rahsia.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192659.jpg" alt="Akses Dibenarkan" width="400">
 </div>
 
 ---
 
-### 2️⃣ Daftar ID / Terima Token dari Bot Telegram  
-*Bot Telegram akan menghantar ID Pengguna, Seed Dinamik, State 8-Qubit, dan Quantum Hash.*
+## 🚀 Cara Guna (Ringkasan)
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/Screenshot_2026-05-29-19-19-38-707_org.telegram.messenger.jpg" alt="Langkah 2: Bot Telegram" width="400">
-</div>
-
----
-
-### 3️⃣ Pengesahan ID – Padanan State Vector & Quantum Hash  
-*Laman web akan membaca token, memaparkan state vector, dan memadankan hash dari Cirq (Python) dengan hash tempatan (JavaScript).*
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192612.jpg" alt="Langkah 3: Padanan Hash" width="400">
-</div>
+| Langkah | Tindakan |
+|---------|----------|
+| 1 | Buka [Schrödinger Hash Portal](https://schr-dinger-hash.pages.dev/) |
+| 2 | Klik **"Jana State Vector (Telegram)"** |
+| 3 | Bot Telegram akan memberi URL dengan token |
+| 4 | Buka URL tersebut — data kuantum dipaparkan |
+| 5 | Login dengan Telegram — sahkan identiti |
+| 6 | Hash diverifikasi — jika padan, **Akses Dibenarkan!** ✅ |
+| 7 | Anda dihalakan ke Portal Kucing Kuantum |
 
 ---
 
-### 4️⃣ Akses Halaman Web / Apps  
-*Setelah hash serasi, sistem memaparkan "Akses Dibenarkan!" – pengguna berjaya masuk ke portal kuantum.*
+## 👨‍💻 Tentang Pembangun
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192659.jpg" alt="Langkah 4: Akses Dibenarkan" width="400">
-</div>
+| Maklumat | Perincian |
+|----------|-----------|
+| **Nama Sebenar** | Zulkarnain |
+| **Nama Samaran** | Johannes Hadamard (MacGyver Coderman) |
+| **Sekolah** | SMK Rantau Panjang, Klang, Selangor |
+| **Umur** | 16 tahun |
+| **Alatan** | Samsung J Prime (milik arwah ibu), Termux |
+| **Inspirasi** | Fizik Kuantum, Erwin Schrödinger, dan semangat nak buktikan sesuatu |
 
----
-
-## 🧪 Cara Guna (Ringkasan Teks)  
-1. Buka laman utama:  
-   👉
-[https://schr-dinger-hash.pages.dev/](https://schr-dinger-hash.pages.dev/) 
-
-3. Klik **“Jana State Vector (Telegram)”** – anda akan disambung ke Bot Telegram.  
-
-4. Bot akan memberi **URL = token** (contoh: `eyJ1IjogIjczNDg2...`).  
-
-5. Laman akan memaparkan **ID Pengguna, State 8-Qubit, dan Quantum Hash**.  
-
-6. Jika hash dari bot dan laman **sama** – maka **Akses Dibenarkan!** ✅  
+> *"Saya tak ada laptop mewah, tak ada guru bimbingan, tak ada duit beli kursus. Tapi saya ada Internet, ada masa rehat, dan ada sebab kenapa saya perlu buktikan mereka silap."*
 
 ---
 
-## 👨‍💻 Tentang Pembangun  
-**Nama sebenar:** Zulkarnain  
-**Nama samaran:** Johannes Hadamard (macgyver coderman)  
-**Sekolah:** SMK Rantau Panjang, Klang, Selangor.  
-**Umur:** 16 tahun.  
-**Alatan:** Samsung J Prime (milik arwah ibu), Termux, kepala batu, dan semangat nak buktikan yang "budak bodoh" pun boleh bina sistem quantum.
+## ❌ Kekurangan (Versi 1.0)
 
-> *“Saya tak ada laptop mewah, tak ada guru bimbingan, tak ada duit beli kursus. Tapi saya ada Internet, ada masa rehat, dan ada sebab kenapa saya perlu buktikan mereka silap.”*
+- ❌ **Tiada backend database** — login tidak kekal (session-based sahaja)
+- ❌ **Tiada penyimpanan data pengguna** — privacy-friendly by design
+- ❌ **Terhad kepada browser** — bukan quantum hardware sebenar
+- ❌ **Simulasi entanglement** — menggunakan `localStorage` + `sessionStorage`
 
----
-
-## 📌 Rancangan Masa Depan (Version 2.0)  
-- [ ] Tambah **localStorage** supaya login kekal selepas refresh.  
-- [ ] Tambah **mesej rahsia / dashboard eksklusif** selepas akses dibenarkan.  
-- [ ] Gunakan **SQLite / Firebase** untuk rekod sesi pengguna.  
-- [ ] Tulis README dwibahasa (Melayu + English) untuk pengikut luar negara.  
+> *"Seperti kotak kuantum — ia hebat, tapi belum tahu isi di dalamnya."*
 
 ---
 
-## 🙏 Penghargaan  
-- **Arwah ibu** – untuk telefon Samsung J Prime yang masih setia menemani.  
-- **Cikgu yang panggil saya bodoh** – terima kasih, sebab kata-kata awak jadi bahan api saya.  
-- **Profesor Erwin Schrödinger** – untuk kucing yang mati hidup serentak.  
+## 📌 Rancangan Masa Depan (v2.0)
+
+- [ ] **Quantum-Inspired JWT** — JSON Web Token dengan state qubit
+- [ ] **Firebase/SQLite** — untuk rekod sesi pengguna (opt-in)
+- [ ] **Dashboard eksklusif** — kandungan rahsia selepas akses
+- [ ] **Multi-platform** — PWA (Progressive Web App)
+- [ ] **API terbuka** — untuk pemaju lain guna sistem ini
+- [ ] **Quantum chatbot** — AI yang "faham" konsep kuantum
+- [ ] **GitHub Actions CI/CD** — automated testing untuk Cirq + Frontend
+- [ ] **Dokumentasi dwibahasa** — Melayu + English
 
 ---
 
-## 📜 Lesen  
+## 🙏 Penghargaan
+
+| Kepada | Sebab |
+|--------|-------|
+| 🕊️ **Arwah ibu** | Untuk telefon Samsung J Prime yang masih setia |
+| 🔥 **Cikgu yang skeptikal** | Kata-kata awak jadi bahan api saya |
+| ⚛️ **Erwin Schrödinger** | Untuk kucing yang mati hidup serentak |
+| 🤖 **AI Assistant** | Membantu debugging dan brainstroming |
+| 🌐 **Komuniti Open Source** | Three.js, GSAP, Tailwind, Lucide, Cirq |
+
+---
+
+## 📜 Lesen
+
 Projek ini untuk tujuan **pendidikan** dan **portfolio peribadi**.  
-Tak perlu minta izin untuk belajar, tapi kalau nak guna semula – letak kredit.  
+Tiada sekatan untuk belajar, tapi sila letak **kredit** jika guna semula.
 
 ---
 
-**“Hukum murni fizik matematik Quantum Entanglement sejati bukan untuk orang dewasa yang sombong.  
-Ia untuk budak kampung dengan telefon buruk yang tak pernah berhenti belajar.”**  
+## ⚠️ Peringatan: Jauhi Scammer Data
 
-– Zulkarnain / Johannes Hadamard  
-SMK Rantau Panjang, Klang, Selangor.  
-🇲🇾
-
----
-
-## 🛡️ Peringatan: Jauhi Anasir Scammer Pencuri Data Login system (Menurut Islam)
-
-> *“Sesungguhnya Allah menyuruh kamu menunaikan amanah kepada yang berhak menerimanya…”*  
+> *"Sesungguhnya Allah menyuruh kamu menunaikan amanah kepada yang berhak menerimanya…"*  
 > (Surah An-Nisa, 4:58)
 
----
-
-### 🔥 Hakikat Scammer Data dalam Sistem Login
+### 🔥 Hakikat Scammer Data
 
 Scammer data adalah mereka yang:
-- Meminta **data peribadi** (nombor telefon, ID Telegram, frasa pemulihan) dengan **tipu daya**.
-- Berkata *“Pendaftaran selamat”* — tetapi data dijual / disalah guna.
-- Menyamar sebagai platform sah untuk **mencuri identiti** dan **merampas akaun**.
+- Meminta **data peribadi** dengan **tipu daya**
+- Berkata "Pendaftaran selamat" — tetapi **data dijual**
+- Menyamar sebagai platform sah untuk **mencuri identiti**
 
-**Dalam Islam, ini adalah gabungan beberapa dosa besar:**
-1. **Curi (sariqah)** — mengambil hak orang tanpa izin.
-2. **Khianat (ghulul)** — mengkhianati amanah pengguna.
-3. **Menipu (taghrir / tadlis)** — mengelirukan dengan ‘muka’ pendaftaran.
-4. **Makan harta dengan batil** — menjual data untuk keuntungan haram.
-5. **Menyusahkan ummah (ad-darar)** — boleh menghancurkan hidup mangsa.
+**Dalam Islam, ini adalah gabungan dosa besar:**
+1. **Curi (sariqah)** — mengambil hak tanpa izin
+2. **Khianat (ghulul)** — mengkhianati amanah pengguna
+3. **Menipu (taghrir/tadlis)** — mengelirukan dengan 'muka' pendaftaran
+4. **Makan harta dengan batil** — menjual data untuk untung haram
 
----
-
-### 📜 Dalil & Ancaman
-
-> *“Dan janganlah kamu saling memakan harta sesamamu dengan jalan yang batil…”*  
-> (Al-Baqarah: 188)
-
-> *“Barangsiapa yang menipu, maka dia bukan dari golonganku.”*  
-> (HR Muslim)
-
-> *“Sesiapa yang mengambil hak saudaranya secara zalim (walaupun sedikit), Allah tidak akan redha sehingga dia menggantinya.”*  
-> (Hadis riwayat Ahmad)
-
-**Scammer data — jika tidak bertaubat dan memulihkan data mangsa, dosanya berterusan selagi data itu disalah guna.**
+> *"Barangsiapa yang menipu, maka dia bukan dari golonganku."* (HR Muslim)
 
 ---
 
-### 🧠 Nasihat untuk Pengguna (Agar Tidak Terpedaya)
+## 🤲 Doa Perlindungan
 
-| Langkah | Peringatan |
-|---------|------------|
-| ✅ **Pastikan platform sah** | Semak URL, ulasan, testimoni. Jangan mudah klik. |
-| ✅ **Jangan beri frasa 12 perkataan** | Itu kunci kepada crypto / identiti. Simpan rahsia. |
-| ✅ **Semak ‘permission’ yang diminta** | Aplikasi doa / kalkulator tak perlu akses kenalan. |
-| ✅ **Guna `2FA` (pengesahan dua faktor)** | Walaupun data bocor, sukar dirampas. |
-| ✅ **Berdoa sebelum daftar** | Mohon perlindungan Allah dari tipu daya. |
+### Doa Sebelum Login:
 
----
+<div align="center">
 
-### 🤲 Doa Mohon Dijauhi Scammer & Pencuri Data
+**رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً ۚ إِنَّكَ أَنتَ الْوَهَّابُ**
 
-**Doa Ringkas (sebelum isi maklumat di platform digital):**
+</div>
 
-> *“Ya Allah, lindungilah aku dari tipu daya pencuri data, dari khianat pengumpul maklumat, dan dari setiap sistem yang berpura-pura jujur tetapi menyembunyikan niat jahat.”*
-
-> *“Jika aku tersilap melangkah ke perangkap mereka — selamatkan aku sebelum `submit`.”*
-
-> *“Jadikanlah data peribadiku sebagai amanah yang dijaga, bukan sebagai `komoditi` yang dicuri.”*
-
-**Doa Mohon Ditunjukkan Platform yang Benar:**
-
-> *“Ya Allah, tunjukkan aku platform yang jujur. Tabirkan dariku sistem-sistem yang dirancang untuk mencuri. Sesungguhnya Engkau Maha Mengetahui apa yang tersembunyi dalam kod dan hati mereka.”*
+> *"Wahai Tuhan kami, janganlah Engkau condongkan hati kami setelah Engkau beri petunjuk kepada kami, dan kurniakanlah kepada kami rahmat dari sisi-Mu. Sesungguhnya Engkau Maha Pemberi."*  
+> (Surah Ali-Imran, 3:8)
 
 ---
 
-### 📌 Komitmen Projek Ini (Jika Tuan Pembangun Platform)
+## 🛡️ Komitmen Projek Ini
 
-Kami berikrar — dengan izin Allah:
-
-| Perkara | Ikr |
-|---------|-----|
-| Tidak mengumpul data tanpa izin yang jelas | ✅ |
-| Tidak menjual / menyalah guna data pengguna | ✅ |
-| Tidak meminta ‘frasa pemulihan’ / kata laluan crypto | ✅ |
-| Memberi pilihan log keluar & padam data | ✅ |
-| Sekiranya tersilap — kami segera taubat dan perbaiki | ✅ |
+| Perkara | Status |
+|---------|--------|
+| Tidak mengumpul data tanpa izin | ✅ |
+| Tidak menjual data pengguna | ✅ |
+| Tidak meminta frasa pemulihan | ✅ |
+| Memberi pilihan padam data | ✅ |
+| Jika tersilap — taubat & perbaiki | ✅ |
 
 ---
 
 ## 🕊️ Penutup
 
-> *“Sebaik-baik manusia ialah yang paling bermanfaat untuk manusia lain.”*  
-> (Hadis riwayat Ahmad, Thabrani)
+> *"Sebaik-baik manusia ialah yang paling bermanfaat untuk manusia lain."*  
+> (Hadis Riwayat Ahmad, Thabrani)
 
-**🌱 Jangan jadi pencuri data. Jangan jadi alat penyesatan. Jadilah pembangun yang jujur, yang sistemnya selamat bukan hanya pada kod — tetapi pada niat.**
+**🌱 Projek ini dibuka dengan `Bismillah`, dijalankan dengan `Tawakkal`, ditutup dengan `Alhamdulillah`.**
 
-— Untuk pembangun, pengguna, dan sesiapa yang membaca:  
-**Selamatkan iman, selamatkan data, selamatkan diri dari api neraka.**
+> *"Hukum murni fizik matematik Quantum Entanglement sejati bukan untuk orang dewasa yang sombong. Ia untuk budak kampung dengan telefon buruk yang tak pernah berhenti belajar."*
 
-
----
-
-## 🤲 Doa dari Al quran untuk sistem login
-
-### رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً ۚ إِنَّكَ أَنتَ الْوَهَّابُ
-
-**توليسن جاوي:**  
-*“ربنا لا تزيغ قلوبنا بعد إذ هديتنا وهب لنا من لدنك رحمة إنك أنت الوهاب”*
-
-**Maksudnya:**  
-*“Wahai Tuhan kami, janganlah Engkau condongkan hati kami setelah Engkau beri petunjuk kepada kami, dan kurniakanlah kepada kami rahmat dari sisi-Mu. Sesungguhnya Engkau Maha Pemberi.”*  
-(Surah Ali-Imran, 3:8)
+— **Zulkarnain / Johannes Hadamard**  
+SMK Rantau Panjang, Klang, Selangor. 🇲🇾
 
 ---
 
-### 📌 كأتينن دعاء اين دالم سيستم لوݢين:
-
-| استفک | سبب |
-|-------|------|
-| ✅ سبلوم ماسوق کدالم فرمولويندافترن | مموهون ڤتنجوق هاتي سوڤاي تيدق ترتيڤ داري حالن يڠ بنر. |
-| ✅ ستله برجاي لوݢين / دافتر | سيوکور کڤد الله کران تيدق دتورونکن کدالم سيستم يڠ منيپو. |
-| ✅ اڤابيلا راضي دکسنال دڠن ڤلاتفورم يڠ راضي-ڨالي | ڤستيکن بهاوا ڤيلهن كامي برساله، بوکن ترتيڤ دالم ڤراڠکڤ سکمير. |
-
----
-
-### 🕊️ ڤسن اورڠ يڠ ممبچ:
-
-> *“ربنا لا تزيغ قلوبنا...”* — اينlah ‘firewall’ ايمان يڠ ڤالينڠ کوات.  
-> بوکن هرڠ `SSL`، بوکن `encryption` — تافي دعاء اين مموهون ڤليهارا دري کونچيڠن هاتي سلسه ماسوق کدالم دنيا ديجيتال.
-
-**جاڠن لوفا سبوت دعاء اين سبلوم `click` بوتون `Login` / `Sign Up`.**  
-
----
-
-🌿 **دبوك دڠن بسم الله، دجالنکن دڠن توكّل، دتوتوف دڠن الحمد لله.**
-
-— ۏنتوق مريك يڠ مموهون ڤرتولوڠن الله دالم سيستم يڠ جوجور، تيدق منيپو، تيدق منجادي ‘سکمر’.
+<div align="center">
+  <p>
+    <a href="https://t.me/kipidapps_bot">
+      <img src="https://img.shields.io/badge/Telegram-Bot-blue?logo=telegram" alt="Telegram Bot">
+    </a>
+    <a href="https://schr-dinger-hash.pages.dev/">
+      <img src="https://img.shields.io/badge/Live-Demo-brightgreen" alt="Live Demo">
+    </a>
+    <a href="https://github.com/Lilmoki91/Schr-dinger-Hash">
+      <img src="https://img.shields.io/badge/GitHub-Repo-black?logo=github" alt="GitHub">
+    </a>
+  </p>
+</div>
