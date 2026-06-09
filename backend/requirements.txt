@@ -1,8 +1,10 @@
 python-telegram-bot[webhooks]>=21.0
 python-dotenv>=1.0.1
-pyqpanda
 numpy>=1.26.0
+requests>=2.31.0
 cryptography>=42.0.0
+
+
 
 
 
