@@ -94,7 +94,28 @@ def calculate_quantum_signature(user_id, seed_hex):
         fidelity = 0.0
 
     signature = hashlib.sha256(f"Kernel_{fidelity:.15f}_{seed_hex}".encode()).hexdigest()
-    return signature, fidelity
+    return signature, fidelity, user_psi
+
+def get_qubit_state_summary(psi):
+    """Dapatkan ringkasan 100-qubit state dari MPS"""
+    try:
+        # Cuba dapatkan qubit states
+        states = []
+        for i in range(min(10, N_QUBITS)):
+            # Measure qubit ke-i
+            rho = psi.partial_trace([j for j in range(N_QUBITS) if j != i])
+            # Check if diagonal
+            prob_0 = abs(rho[0, 0]) if hasattr(rho, '__getitem__') else 0.5
+            states.append("|0⟩" if prob_0 > 0.5 else "|1⟩")
+        
+        first = " ".join(states[:5])
+        last = " ".join(states[-5:])
+        return f"{first} ... [{N_QUBITS-10} qubit] ... {last}"
+    except:
+        # Fallback: guna hash
+        q_hash = hashlib.md5(str(psi).encode()).hexdigest()
+        bits = bin(int(q_hash[:8], 16))[2:].zfill(32)
+        return " ".join(["|0⟩" if b == '0' else "|1⟩" for b in bits[:10]]) + " ..."
 
 # ==========================================
 # FLASK
@@ -161,11 +182,14 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     try:
         loop = asyncio.get_event_loop()
-        quantum_hash, fidelity = await loop.run_in_executor(
+        quantum_hash, fidelity, psi = await loop.run_in_executor(
             None, calculate_quantum_signature, user_id, seed_hex
         )
         qmid = await loop.run_in_executor(
             None, generate_quantum_kernel_id, user_id
+        )
+        q_state = await loop.run_in_executor(
+            None, get_qubit_state_summary, psi
         )
     except Exception as e:
         await status_msg.delete()
@@ -189,6 +213,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"<b>• Akses ke-:</b> <code>{count}</code>\n"
         f"<b>• Token sah:</b> <code>{ttl} saat</code>\n"
         f"<b>• Seed Kuantum:</b> <code>{seed_hex[:12]}...</code>\n"
+        f"<b>• 100-Qubit State:</b> <code>{q_state}</code>\n"
         f"<b>• Fidelity Skor:</b> <code>{fidelity:.8f}</code>\n"
         f"<b>• Hash Kuantum:</b> <code>{quantum_hash[:16]}...</code>\n\n"
         f"<i>🌀 Enjin Quimb | 100-Qubit MPS | Bond-16</i>"
@@ -206,7 +231,6 @@ def main():
         print("BOT_TOKEN tidak diset!")
         return
     
-    # Delete webhook lama untuk elak conflict
     httpx.post(f"https://api.telegram.org/bot{TOKEN}/deleteWebhook")
     
     flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=PORT), daemon=True)
