@@ -1,0 +1,1053 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Identity Gate | Entanglement ⚛️⚛️</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #02050c;
+            color: #00ffcc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 12px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ========== THREE.JS CANVAS ========== */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            display: block;
+        }
+
+        /* ========== MOBILE APP LAYOUT ========== */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 8px;
+        }
+
+        /* ========== UI WRAPPER PER SESSION ========== */
+        .ui-wrapper {
+            width: 100%;
+            margin: 10px 0;
+            transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease, margin 0.4s ease;
+            max-height: 2000px;
+        }
+
+        .ui-wrapper.minimized {
+            max-height: 0 !important;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+            transform: translateY(-20px) scale(0.95);
+            overflow: hidden;
+        }
+
+        .ui-wrapper.hidden {
+            display: none !important;
+        }
+
+        .gate-container {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px 16px;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        /* ---------- 1. INIT WRAPPER (Green) ---------- */
+        #init-wrapper .gate-container {
+            margin-top: 25.5rem;
+            background: rgba(11, 17, 32, 0.85);
+            border: 1px solid rgba(0, 255, 102, 0.3);
+            box-shadow: 0 0 40px rgba(0, 255, 102, 0.1), 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        /* ---------- 2. AUTH WRAPPER (Data + Login combined - Cyan/Purple gradient) ---------- */
+        #auth-wrapper .gate-container {
+            margin-top: 4rem;
+            background: linear-gradient(135deg, rgba(8, 18, 30, 0.85), rgba(15, 10, 30, 0.85));
+            border: 1px solid rgba(0, 204, 255, 0.25);
+            box-shadow: 0 0 40px rgba(0, 204, 255, 0.08), 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+        #auth-wrapper .highlight {
+            color: #00ccff;
+            background: rgba(0, 204, 255, 0.1);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+        }
+
+        /* ---------- 3. VERIFY WRAPPER (Gold/Orange) ---------- */
+        #verify-wrapper .gate-container {
+            margin-top: 12rem; 
+            background: rgba(20, 15, 5, 0.85);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            box-shadow: 0 0 40px rgba(255, 170, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        /* ========== MINIMIZE BUTTON (HANYA INIT) ========== */
+        .minimize-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: #222;
+            
+            color: #aaa;
+        
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+            z-index: 20;
+            touch-action: manipulation;
+            
+        }
+
+        .minimize-btn:active {
+            transform: scale(0.9);
+        }
+
+        .minimize-btn:hover {
+            background: 2px solid #555;
+            border-color: #ff5555;
+            color: #ff5555;
+            box-shadow: 0 0 50px rgba(255, 85, 85, 0.4);
+            transform: rotate(180deg);
+        }
+
+        /* ========== RESTORE BUTTON ========== */
+        .restore-btn {
+            bottom: 3rem !important;
+            position: fixed;
+        
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            color: #00ff66;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 102, 0.15);
+            letter-spacing: 1px;
+            touch-action: manipulation;
+        }
+
+        .restore-btn:active {
+            transform: scale(0.9);
+        }
+
+        .restore-btn:hover {
+            background: rgba(0, 255, 102, 0.15);
+            border-color: #00ff66;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+        .gate-container h1 {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 16px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00ff66;
+            text-shadow: 0 0 12px rgba(0, 255, 102, 0.5);
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 8px;
+            color: #aaa;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        /* ========== SECTION DIVIDER ========== */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 204, 255, 0.3), rgba(153, 51, 255, 0.3), transparent);
+            margin: 16px 0;
+        }
+
+        .section-label {
+            font-size: 9px;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #00ff66;
+            color: #050914;
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            text-decoration: none;
+            border-radius: 50px !important;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:hover {
+            background: #000;
+            color: #00ff66;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.5);
+            border-color: #00ff66;
+        }
+
+        .btn-secondary {
+            background: rgba(51, 51, 51, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #aaa;
+        }
+        .btn-secondary:hover {
+            background: rgba(51, 51, 51, 0.8);
+            color: #00ffcc;
+            border-color: #00ffcc;
+        }
+
+        /* ========== CONSOLE ========== */
+        .console {
+            background: rgba(0, 0, 0, 0.7);
+            color: #0f0;
+            padding: 12px;
+            font-size: 10px;
+            text-align: left;
+            height: 160px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 102, 0.2);
+            border-radius: 10px;
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.6;
+        }
+
+        .console::-webkit-scrollbar { width: 5px; }
+        .console::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.5); }
+        .console::-webkit-scrollbar-thumb { background: rgba(0, 255, 102, 0.3); border-radius: 3px; }
+
+        .error { color: #ff3333; margin-top: 10px; font-weight: bold; font-size: 11px; }
+        .success { color: #00ff66; font-weight: bold; }
+        .hidden { display: none !important; }
+
+        .telegram-login {
+            min-height: 50px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .warning { color: #ffaa00; margin-top: 8px; font-size: 10px; }
+
+        /* ========== DATA PANEL ========== */
+        .data-panel {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: left;
+            font-size: 10px;
+        }
+        .data-panel .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 8px;
+        }
+        .data-panel .row:last-child { border-bottom: none; }
+        .label { color: #8899aa; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+        .value { color: #00ffcc; font-weight: bold; text-align: right; word-break: break-all; font-size: 10px; }
+        .highlight { color: #00ff66; background: rgba(0, 255, 102, 0.08); border-radius: 4px; padding: 2px 5px; }
+
+        /* ========== 3D LABELS ========== */
+        .label-3d {
+            position: fixed;
+            top: 8%;
+            color: #00ff66;
+            font-family: 'Orbitron', monospace;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            z-index: 5;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+            pointer-events: none;
+        }
+        .label-left { left: 4%; }
+        .label-right { right: 4%; }
+        .label-3d span { font-size: 7px; display: block; opacity: 0.7; margin-top: 2px; }
+
+        .info-bar {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7px !important;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 6px 5px !important;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+            backdrop-filter: blur(8px);
+            pointer-events: none;
+            white-space: pre;
+            word-break: break-all;
+        
+             
+        }
+
+        /* ========== MOBILE OPTIMIZATION ========== */
+        @media (max-width: 640px) {
+            body {
+                padding: 8px;
+            }
+
+            .app-container {
+                max-width: 100%;
+                padding: 4px;
+            }
+
+            .gate-container {
+                padding: 18px 14px;
+                border-radius: 14px;
+            }
+
+            .gate-container h1 {
+                font-size: 14px;
+                letter-spacing: 1.5px;
+            }
+
+            .subtitle {
+                font-size: 7px;
+                letter-spacing: 1px;
+                margin-bottom: 14px;
+            }
+
+            .btn {
+                padding: 13px;
+                font-size: 10px;
+                border-radius: 10px;
+            }
+
+            .data-panel {
+                padding: 10px;
+            }
+
+            .data-panel .row {
+                padding: 3px 0;
+            }
+
+            .label {
+                font-size: 8px;
+            }
+
+            .value {
+                font-size: 9px;
+            }
+
+            .label-3d {
+                font-size: 7px;
+                top: 5%;
+            }
+
+            .label-left { left: 2%; }
+            .label-right { right: 2%; }
+
+            .info-bar {
+                font-size: 8px;
+                padding: 5px 12px;
+                bottom: 8px;
+            }
+
+            .restore-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 9px;
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .minimize-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 10px;
+            }
+
+            .console {
+                height: 140px;
+                font-size: 9px;
+            }
+
+            .section-label {
+                font-size: 8px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            .gate-container h1 {
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 9px;
+                padding: 12px;
+            }
+
+            .data-panel .row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+
+            .value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ========== THREE.JS CANVAS ========== -->
+<canvas id="three-canvas"></canvas>
+
+<!-- ========== LABEL 3D ========== -->
+<div class="label-3d label-left">BOX-A ⚛️ Master MPS<span>Reference State</span></div>
+<div class="label-3d label-right">BOX-B ⚛️ User MPS<span>Challenge State</span></div>
+<div class="info-bar">QUANTUM KERNEL MATRIX-100-Qubit Tensor Network (MPS) | Drag to rotate</div>
+
+
+<!-- ========== APP CONTAINER ========== -->
+<div class="app-container">
+
+    <!-- ========== WRAPPER 1: INIT ========== -->
+    <div class="ui-wrapper" id="init-wrapper">
+        <div class="gate-container">
+            <button id="minimize-btn" class="minimize-btn" title="Minimize UI">✕</button>
+            <h1>⚛️ Quantum Kernel Gate</h1>
+            <div class="subtitle">100-Qubit Tensor Network (MPS) • ANU Quantum Random</div>
+
+            <div id="init-section" class="mb-6">
+                <a href="https://t.me/kipidapps_bot" target="_blank" class="btn">🔐 Jana Quantum Kernel (Telegram)</a>
+                <p class="warning">⚠️ Token tamat selepas 30s – 10 minit (Fibonacci TTL)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== WRAPPER 2: AUTH (Data + Login) ========== -->
+    <div class="ui-wrapper hidden" id="auth-wrapper">
+        <div class="gate-container">
+
+            <!-- DATA SECTION -->
+            <div id="data-section" class="mb-2">
+                <div class="section-label">📊 Data Token — 100-Qubit Kernel</div>
+                <div class="data-panel">
+                    <div class="row"><span class="label">🌀 Kernel Matrix ID:</span><span id="displayQuantumMatrixId" class="value highlight">-</span></div>
+                    <div class="row"><span class="label">👤 User ID:</span><span id="displayUserId" class="value">-</span></div>
+                    <div class="row"><span class="label">🔢 Akses ke-:</span><span id="displayAccessCount" class="value">-</span></div>
+                    <div class="row"><span class="label">⏱️ Token sah:</span><span id="displayTokenTTL" class="value">-</span></div>
+                    <div class="row"><span class="label">🌱 Seed Kuantum:</span><span id="displaySeed" class="value">-</span></div>
+                    <div class="row"><span class="label">💻 100-Qubit State:</span><span id="displayQubits" class="value">-</span></div>
+                    <div class="row"><span class="label">📊 Fidelity Skor:</span><span id="displayFidelity" class="value highlight">-</span></div>
+                    <div class="row"><span class="label">🔑 Hash Kuantum:</span><span id="displayHash" class="value">-</span></div>
+                </div>
+            </div>
+
+            <!-- DIVIDER -->
+            <div class="section-divider"></div>
+
+            <!-- LOGIN SECTION -->
+            <div id="login-section" class="mt-2 flex flex-col items-center justify-center text-center">
+                <div class="section-label">🔐 Pengesahan Identiti</div>
+                <p class="text-xs tracking-wider mb-2" style="font-size: 10px; color: #aaa;">Sahkan identiti pemerhati kuantum</p>
+                <div id="telegram-login" class="telegram-login flex justify-center mb-3 w-full"></div>
+                <p id="error-msg" class="error hidden"></p>
+                <button id="backToInitBtn" class="btn btn-secondary mx-auto mt-2">⬅ Kembali / Jana Token Baru</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========== WRAPPER 3: VERIFY ========== -->
+    <div class="ui-wrapper hidden" id="verify-wrapper">
+        <div class="gate-container">
+            <div id="verify-section" class="mt-2 mb-2 flex flex-col items-center justify-center text-center">
+                <p id="status-text" class="text-sm font-bold tracking-wider mb-3" style="font-size: 12px;">🌀 Menyelaras Tensor Network 100-Qubit...</p>
+                <div class="console w-full max-w-md mx-auto" id="console-log"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== RESTORE BUTTON ========== -->
+    <button id="restore-btn" class="restore-btn hidden" title="Restore UI">⚛️ UI</button>
+
+    <!-- ========== THREE.JS IMPORT MAP ========== -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- ========== THREE.JS 3D SCENE ========== -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        console.log("🚀 Three.js 3D Scene Initializing...");
+
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x02050c);
+        scene.fog = new THREE.FogExp2(0x02050c, 0.0001);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 40);
+        camera.position.set(0, 0.9, 10);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.3;
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.9;
+        controls.minDistance = 4;
+        controls.maxDistance = 15;
+        controls.target.set(0, 0, 0);
+        controls.enablePan = false;
+
+        scene.add(new THREE.AmbientLight(0x002211, 0.4));
+        const mainLight = new THREE.PointLight(0x00ff66, 25, 15);
+        mainLight.position.set(0, 4, 0);
+        scene.add(mainLight);
+        const lightLeft = new THREE.PointLight(0x00ffaa, 12, 8);
+        lightLeft.position.set(-3, 1, 2);
+        scene.add(lightLeft);
+        const lightRight = new THREE.PointLight(0x00ffaa, 12, 8);
+        lightRight.position.set(3, 1, 2);
+        scene.add(lightRight);
+
+        const starsGeo = new THREE.BufferGeometry();
+        const starCount = 10000;
+        const starPositionsArr = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i += 3) {
+            starPositionsArr[i] = (Math.random() - 0.5) * 30;
+            starPositionsArr[i + 1] = (Math.random() - 0.5) * 20;
+            starPositionsArr[i + 2] = (Math.random() - 0.5) * 20;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositionsArr, 3));
+        const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({
+            color: 0x00ff66, size: 0.02, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending,
+        }));
+        scene.add(stars);
+
+        const gridHelper = new THREE.PolarGridHelper(8, 48, 32, 128, 0x00ff66, 0x00ff66);
+        gridHelper.position.y = -3;
+        scene.add(gridHelper);
+
+        function createQuantumBox(parentGroup) {
+            const boxGroup = new THREE.Group();
+            const boxGeo = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+            const boxEdges = new THREE.EdgesGeometry(boxGeo);
+            boxGroup.add(new THREE.LineSegments(boxEdges, new THREE.LineBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.8 })));
+            boxGroup.add(new THREE.Mesh(boxGeo, new THREE.MeshPhysicalMaterial({ color: 0x00ff66, metalness: 0.05, roughness: 0.2, transparent: true, opacity: 0.06 })));
+            const cornerGeo = new THREE.SphereGeometry(0.06, 8, 8);
+            const cornerMat = new THREE.MeshStandardMaterial({ color: 0x00ff66, emissive: 0x00ff66, emissiveIntensity: 1.5 });
+            [[-0.9, -0.9, -0.9], [0.9, -0.9, -0.9], [-0.9, 0.9, -0.9], [0.9, 0.9, -0.9], [-0.9, -0.9, 0.9], [0.9, -0.9, 0.9], [-0.9, 0.9, 0.9], [0.9, 0.9, 0.9]].forEach(([x, y, z]) => {
+                const corner = new THREE.Mesh(cornerGeo, cornerMat);
+                corner.position.set(x, y, z);
+                boxGroup.add(corner);
+            });
+            parentGroup.add(boxGroup);
+            return boxGroup;
+        }
+
+        function createAtom(parentGroup, colorScheme) {
+            const atomGroup = new THREE.Group();
+            const nucleus = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 32), new THREE.MeshStandardMaterial({ color: colorScheme.nucleus, emissive: colorScheme.nucleus, emissiveIntensity: 2, roughness: 0.1, metalness: 0.5 }));
+            atomGroup.add(nucleus);
+            const nGlow = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), new THREE.MeshBasicMaterial({ color: colorScheme.nucleus, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending }));
+            atomGroup.add(nGlow);
+
+            const orbitsGroup = new THREE.Group();
+            const orbitColors = [colorScheme.orbit1, colorScheme.orbit2, colorScheme.orbit3];
+            const orbitData = [
+                { radius: 0.5, rotX: 0, rotY: 0, rotZ: 0 },
+                { radius: 0.42, rotX: Math.PI * 0.4, rotY: Math.PI * 0.3, rotZ: 0 },
+                { radius: 0.46, rotX: -Math.PI * 0.35, rotY: -Math.PI * 0.25, rotZ: Math.PI * 0.2 },
+            ];
+            const orbitRefs = [];
+            orbitData.forEach((data, i) => {
+                const ringGroup = new THREE.Group();
+                ringGroup.add(new THREE.Mesh(new THREE.TorusGeometry(data.radius, 0.008, 8, 96), new THREE.MeshStandardMaterial({ color: orbitColors[i], emissive: orbitColors[i], emissiveIntensity: 0.8, roughness: 0.2 })));
+                ringGroup.add(new THREE.Mesh(new THREE.TorusGeometry(data.radius, 0.025, 8, 96), new THREE.MeshBasicMaterial({ color: orbitColors[i], transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending })));
+                ringGroup.rotation.set(data.rotX, data.rotY, data.rotZ);
+                orbitsGroup.add(ringGroup);
+                orbitRefs.push({ group: ringGroup, radius: data.radius, rotation: { x: data.rotX, y: data.rotY, z: data.rotZ } });
+            });
+            atomGroup.add(orbitsGroup);
+
+            const electronsGroup = new THREE.Group();
+            const electronRefs = [];
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 2; j++) {
+                    const eGroup = new THREE.Group();
+                    eGroup.add(new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 16), new THREE.MeshStandardMaterial({ color: orbitColors[i], emissive: orbitColors[i], emissiveIntensity: 1.5, roughness: 0.1 })));
+                    eGroup.add(new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), new THREE.MeshBasicMaterial({ color: orbitColors[i], transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending })));
+                    electronsGroup.add(eGroup);
+                    electronRefs.push({ mesh: eGroup, orbitIndex: i, speed: 0.7 + i * 0.25, offset: j * Math.PI });
+                }
+            }
+            atomGroup.add(electronsGroup);
+            parentGroup.add(atomGroup);
+            return { atomGroup, orbitRefs, electronRefs, nucleus, nGlow };
+        }
+
+        const boxAGroup = new THREE.Group();
+        boxAGroup.position.set(-3, 0, 0);
+        scene.add(boxAGroup);
+        createQuantumBox(boxAGroup);
+        const atomAData = createAtom(boxAGroup, { nucleus: 0xff4444, orbit1: 0x00ff66, orbit2: 0x00aaff, orbit3: 0xffaa00 });
+
+        const boxBGroup = new THREE.Group();
+        boxBGroup.position.set(3, 0, 0);
+        scene.add(boxBGroup);
+        createQuantumBox(boxBGroup);
+        const atomBData = createAtom(boxBGroup, { nucleus: 0x4488ff, orbit1: 0xff6644, orbit2: 0x44ff88, orbit3: 0xff88cc });
+
+        const entanglementGroup = new THREE.Group();
+        scene.add(entanglementGroup);
+        const stringCurve = new THREE.CubicBezierCurve3(new THREE.Vector3(-2.1, 0, 0), new THREE.Vector3(-1, 0.4, 0.3), new THREE.Vector3(1, -0.3, -0.2), new THREE.Vector3(2.1, 0, 0));
+        const stringGeo = new THREE.TubeGeometry(stringCurve, 64, 0.02, 8, false);
+        const stringMat = new THREE.MeshStandardMaterial({ color: 0x00ff66, emissive: 0x00ff66, emissiveIntensity: 0.8, roughness: 0.2, metalness: 0.4 });
+        entanglementGroup.add(new THREE.Mesh(stringGeo, stringMat));
+        const stringGlowGeo = new THREE.TubeGeometry(stringCurve, 64, 0.06, 8, false);
+        const stringGlowMat = new THREE.MeshBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending });
+        entanglementGroup.add(new THREE.Mesh(stringGlowGeo, stringGlowMat));
+
+        const meshGroup = new THREE.Group();
+        entanglementGroup.add(meshGroup);
+        const meshRadius = 0.15;
+        for (let i = 0; i < 20; i++) {
+            const t = i / 19;
+            const point = stringCurve.getPointAt(t);
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(meshRadius, 0.05, 8, 12), new THREE.MeshStandardMaterial({ color: 0x00ffaa, emissive: 0x00ff66, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 0.5 + Math.sin(t * Math.PI) * 0.4 }));
+            ring.position.copy(point);
+            const tangent = stringCurve.getTangentAt(t).normalize();
+            const quaternion = new THREE.Quaternion();
+            quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+            ring.setRotationFromQuaternion(quaternion);
+            meshGroup.add(ring);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = performance.now() * 0.001;
+            stars.rotation.y += 0.00008;
+            stars.rotation.x += 0.00003;
+
+            atomAData.electronRefs.forEach(e => {
+                const orbit = atomAData.orbitRefs[e.orbitIndex];
+                const angle = elapsedTime * e.speed + e.offset;
+                const pos = new THREE.Vector3(Math.cos(angle) * orbit.radius, 0, Math.sin(angle) * orbit.radius);
+                pos.applyEuler(new THREE.Euler(orbit.rotation.x, orbit.rotation.y, orbit.rotation.z));
+                e.mesh.position.copy(pos);
+            });
+            atomAData.nucleus.scale.setScalar(1 + Math.sin(elapsedTime * 4) * 0.08);
+            atomAData.nGlow.scale.setScalar(1 + Math.sin(elapsedTime * 4) * 0.1);
+
+            atomBData.electronRefs.forEach(e => {
+                const orbit = atomBData.orbitRefs[e.orbitIndex];
+                const angle = elapsedTime * e.speed + e.offset + Math.PI;
+                const pos = new THREE.Vector3(Math.cos(angle) * orbit.radius, 0, Math.sin(angle) * orbit.radius);
+                pos.applyEuler(new THREE.Euler(orbit.rotation.x, orbit.rotation.y, orbit.rotation.z));
+                e.mesh.position.copy(pos);
+            });
+            atomBData.nucleus.scale.setScalar(1 + Math.cos(elapsedTime * 4) * 0.08);
+            atomBData.nGlow.scale.setScalar(1 + Math.cos(elapsedTime * 4) * 0.1);
+
+            stringMat.emissiveIntensity = 0.8 + Math.sin(elapsedTime * 5) * 0.3;
+            stringGlowMat.opacity = 0.12 + Math.sin(elapsedTime * 3) * 0.04;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+
+    <!-- ========== GATE LOGIC ========== -->
+    <script>
+        const BOT_USERNAME = "kipidapps_bot";
+        let state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null, accessCount: null, ttlSeconds: null, qStateVisual: null, quantumMatrixId: null };
+
+        // ========== MINIMIZE / RESTORE LOGIC (HANYA INIT) ==========
+        const initWrapper = document.getElementById('init-wrapper');
+        const minimizeBtn = document.getElementById('minimize-btn');
+        const restoreBtn = document.getElementById('restore-btn');
+
+        if (minimizeBtn && restoreBtn && initWrapper) {
+            minimizeBtn.addEventListener('click', () => {
+                initWrapper.classList.add('minimized');
+                restoreBtn.classList.remove('hidden');
+            });
+
+            restoreBtn.addEventListener('click', () => {
+                initWrapper.classList.remove('minimized');
+                restoreBtn.classList.add('hidden');
+            });
+        }
+
+        // ========== SWITCH WRAPPER ==========
+        function setActiveWrappers(activeIds) {
+            const allIds = ['init-wrapper', 'auth-wrapper', 'verify-wrapper'];
+            allIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (activeIds.includes(id)) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        function log(msg, cls = '') {
+            const box = document.getElementById('console-log');
+            if (!box) return;
+            const line = document.createElement('div');
+            line.className = cls;
+            line.innerText = '> ' + msg;
+            box.appendChild(line);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function formatTTL(seconds) {
+            if (!seconds) return "N/A";
+            if (seconds < 60) return `${seconds} saat`;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins} minit ${secs} saat`;
+        }
+
+        function resetToInit() {
+            state = { token: null, userIdFromToken: null, seedHex: null, remoteHash: null, tokenId: null, accessCount: null, ttlSeconds: null, qStateVisual: null, quantumMatrixId: null };
+            setActiveWrappers(['init-wrapper']);
+            document.getElementById('telegram-login').innerHTML = '';
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.classList.add('hidden');
+            errorMsg.innerText = '';
+            if (initWrapper) {
+                initWrapper.classList.remove('minimized');
+                if (restoreBtn) restoreBtn.classList.add('hidden');
+            }
+        }
+
+        function displayTokenData(data) {
+            document.getElementById('displayQuantumMatrixId').innerText = data.qid || "-";
+            document.getElementById('displayUserId').innerText = data.u || "-";
+            document.getElementById('displayAccessCount').innerText = data.cnt || "-";
+            document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ? ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
+            document.getElementById('displaySeed').innerText = data.s ? data.s.substring(0, 16) + "..." : "-";
+            if (data.h) {
+                const qState = data.h.substring(0, 8).split('').map(c => (parseInt(c, 16) % 2 === 0) ? '|0⟩' : '|1⟩').join(' ');
+                document.getElementById('displayQubits').innerText = qState;
+                document.getElementById('displayHash').innerText = data.h.substring(0, 16) + "...";
+                state.qStateVisual = qState;
+            }
+            if (data.qid) state.quantumMatrixId = data.qid;
+            state.accessCount = data.cnt;
+            state.ttlSeconds = data.ttl;
+        }
+
+        async function isTokenUsedOnServer(tokenId) {
+            return localStorage.getItem(`server_used_${tokenId}`) === 'true';
+        }
+        async function markTokenUsedOnServer(tokenId) {
+            localStorage.setItem(`server_used_${tokenId}`, 'true');
+        }
+
+// 📌 sistem pengiraan hash 📌
+const VERIFY_URL = 'https://schr-dinger-hash.onrender.com/api/verify';
+
+// ============================================================
+// SISTEM PENGESAHAN HASH (PANGGIL PYTHON)
+// ============================================================
+async function verifyQuantumHash(userId, seedHex, tokenHash) {
+    console.log("⚛️ Verify guna Python API:", VERIFY_URL);
+    
+    const response = await fetch(VERIFY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: userId,
+            seed_hex: seedHex,
+            token_hash: tokenHash
+        })
+    });
+    
+    if (!response.ok) throw new Error('Verify API gagal');
+    
+    const result = await response.json();
+    console.log("🔍 Python Verify:", result.match ? "✅ PADAN" : "❌ TIDAK PADAN");
+    return result.match;
+}
+
+// ============================================================
+// PAPARAN DATA TOKEN (QUIMB 100-QUBIT)
+// ============================================================
+function displayTokenData(data) {
+    document.getElementById('displayQuantumMatrixId').innerText = data.qid || "-";
+    document.getElementById('displayUserId').innerText = data.u || "-";
+    document.getElementById('displayAccessCount').innerText = data.cnt || "-";
+    document.getElementById('displayTokenTTL').innerText = formatTTL(data.ttl) + (data.exp ? ` (hingga ${new Date(data.exp*1000).toLocaleTimeString()})` : "");
+    document.getElementById('displaySeed').innerText = data.s ? data.s.substring(0, 16) + "..." : "-";
+    
+    if (data.h) {
+        document.getElementById('displayHash').innerText = data.h.substring(0, 16) + "...";
+    }
+    
+    // Papar fidelity jika ada
+    if (data.fid !== undefined) {
+        document.getElementById('displayFidelity').innerText = data.fid.toFixed(8);
+        document.getElementById('fidelity-row').classList.remove('hidden');
+    }
+    
+    if (data.qid) state.quantumMatrixId = data.qid;
+    state.accessCount = data.cnt;
+    state.ttlSeconds = data.ttl;
+}
+
+// ============================================================
+// SISTEM PENGESAHAN WEBAPPS
+// ============================================================
+window.onTelegramAuth = async function(telegramUser) {
+    const loggedInUserId = telegramUser.id.toString();
+    const errorMsg = document.getElementById('error-msg');
+
+    if (!state.userIdFromToken) {
+        errorMsg.innerText = "❌ Tiada token.";
+        errorMsg.classList.remove('hidden');
+        return;
+    }
+    if (state.tokenId) {
+        if (await isTokenUsedOnServer(state.tokenId)) {
+            errorMsg.innerText = "[403] Token sudah digunakan!";
+            errorMsg.classList.remove('hidden');
+            return;
+        }
+        const usedKey = `used_quantum_token_${state.tokenId}`;
+        if (sessionStorage.getItem(usedKey)) {
+            errorMsg.innerText = "[403] Token sudah digunakan!";
+            errorMsg.classList.remove('hidden');
+            return;
+        }
+        await markTokenUsedOnServer(state.tokenId);
+        sessionStorage.setItem(usedKey, 'true');
+    }
+    if (loggedInUserId !== state.userIdFromToken) {
+        errorMsg.innerText = `[403] Identiti tak sepadan!`;
+        errorMsg.classList.remove('hidden');
+        return;
+    }
+
+    errorMsg.classList.add('hidden');
+    setActiveWrappers(['verify-wrapper']);
+
+    log(`✅ Identiti: ${loggedInUserId}`);
+    if (state.quantumMatrixId) log(`🌀 Kernel Matrix ID: ${state.quantumMatrixId}`);
+    if (state.fidelity) log(`📊 Fidelity Skor: ${state.fidelity.toFixed(8)}`);
+    log(`🔑 Hash: ${state.remoteHash.substring(0,16)}...`);
+    log("🌀 Membina Tensor Network 100-Qubit...");
+
+    // Panggil Python Verify API
+    const match = await verifyQuantumHash(state.userIdFromToken, state.seedHex, state.remoteHash);
+    
+    log(`🤖 Bot Hash: ${state.remoteHash.substring(0,16)}...`);
+
+    if (match) {
+        log("✅ PENGESAHAN BERJAYA", "success");
+        document.getElementById('status-text').innerText = "✨ Portal Quantum Kernel Dibuka ✨";
+        document.getElementById('status-text').className = "success";
+        
+        setTimeout(() => {
+            window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(state.token)}`;
+        }, 2000);
+    } else {
+        log("❌ HASH TIDAK PADAN", "error");
+        document.getElementById('status-text').innerText = "⛔ Akses Ditolak.";
+        document.getElementById('status-text').className = "error";
+    }
+};
+
+// ============================================================
+// SISTEM AKSES WEBAPPS
+// ============================================================
+window.onload = () => {
+    const token = new URLSearchParams(window.location.search).get('token');
+    document.getElementById('backToInitBtn')?.addEventListener('click', resetToInit);
+
+    if (token) {
+        try {
+            const data = JSON.parse(atob(token));
+            const tokenId = data.tid || null;
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (tokenId) {
+                const accessKey = `qa_count_${tokenId}`;
+                const fullyUsedKey = `qa_fully_used_${tokenId}`;
+                let accessCount = parseInt(sessionStorage.getItem(accessKey) || '0');
+
+                if (localStorage.getItem(fullyUsedKey) === 'true') {
+                    setActiveWrappers(['init-wrapper']);
+                    const w = document.createElement('p');
+                    w.className = 'error';
+                    w.innerText = '❌ Token telah mencapai had 2 akses.';
+                    document.getElementById('init-section').appendChild(w);
+                    setTimeout(() => w.remove(), 6000);
+                    return;
+                }
+
+                if (accessCount >= 2) {
+                    setActiveWrappers(['init-wrapper']);
+                    const w = document.createElement('p');
+                    w.className = 'error';
+                    w.innerHTML = '⚠️ Token digunakan.<br>🔗 Menghala ke Portal...';
+                    document.getElementById('init-section').appendChild(w);
+                    setTimeout(() => {
+                        window.location.href = `kucing-kuantum.html?token=${encodeURIComponent(token)}`;
+                    }, 2000);
+                    return;
+                }
+
+                accessCount = 1;
+                sessionStorage.setItem(accessKey, accessCount.toString());
+            }
+
+            if (data.exp && currentTime > data.exp) {
+                setActiveWrappers(['init-wrapper']);
+                const w = document.createElement('p');
+                w.className = 'error';
+                w.innerText = '⚠️ Token tamat tempoh.';
+                document.getElementById('init-section').appendChild(w);
+                setTimeout(() => w.remove(), 5000);
+                return;
+            }
+
+            state.token = token;
+            state.userIdFromToken = data.u;
+            state.seedHex = data.s;
+            state.remoteHash = data.h;
+            state.tokenId = tokenId;
+            state.quantumMatrixId = data.qid || null;
+            state.fidelity = data.fid || null;
+            if (data.cnt) state.accessCount = data.cnt;
+            if (data.ttl) state.ttlSeconds = data.ttl;
+
+            displayTokenData(data);
+            setActiveWrappers(['auth-wrapper']);
+
+            const widgetContainer = document.getElementById('telegram-login');
+            widgetContainer.innerHTML = '';
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = "https://telegram.org/js/telegram-widget.js?22";
+            script.setAttribute('data-telegram-login', BOT_USERNAME);
+            script.setAttribute('data-size', 'large');
+            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+            script.setAttribute('data-request-access', 'write');
+            widgetContainer.appendChild(script);
+
+        } catch (err) {
+            console.error("Ralat:", err.message);
+            setActiveWrappers(['init-wrapper']);
+        }
+    }
+};
+
+    </script>
+</body>
+</html>
