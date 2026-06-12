@@ -9,3 +9,4 @@ opt_einsum>=3.3.0
 autoray>=0.6.12
 scipy>=1.12.0
 numpy>=1.26.0
+httpx>=0.27
