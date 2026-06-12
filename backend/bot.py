@@ -211,7 +211,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"<b>• User ID:</b> <code>{user_id}</code>\n"
         f"<b>• Kernel Matrix ID:</b> <code>{qmid}</code>\n"
         f"<b>• Akses ke-:</b> <code>{count}</code>\n"
-        f"<b>• Token sah:</b> <code>{ttl} saat</code>\n"
+        f"<b>• Token sah:</b> <code>{ttl} saat ({ttl/60:.1f} minit)</code>\n"
         f"<b>• Seed Kuantum:</b> <code>{seed_hex[:12]}...</code>\n"
         f"<b>• 100-Qubit State:</b> <code>{q_state}</code>\n"
         f"<b>• Fidelity Skor:</b> <code>{fidelity:.8f}</code>\n"
