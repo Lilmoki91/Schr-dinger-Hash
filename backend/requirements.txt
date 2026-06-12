@@ -1,8 +1,13 @@
 python-telegram-bot[webhooks]>=21.0
 python-dotenv>=1.0.1
-cirq-core>=1.4.0
-numpy>=1.26.0
 requests>=2.31.0
 flask>=3.0
 flask-cors>=4.0
 cryptography>=42.0.0
+
+# Enjin Kuantum Baharu (100-Qubit Tensor Network)
+quimb>=1.8.0
+opt_einsum>=3.3.0
+autoray>=0.6.12
+scipy>=1.12.0
+numpy>=1.26.0
