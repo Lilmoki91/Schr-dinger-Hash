@@ -260,3 +260,7 @@ SMK Rantau Panjang, Klang, Selangor. 🇲🇾
     </a>
   </p>
 </div>
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/hologram%20quantum%20.jpg" alt="Akses Dibenarkan" width="300">
+</div>
