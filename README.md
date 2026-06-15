@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="500">
   
   <h1>⚛️ Schrödinger Hash</h1>
-  <h3>Quantum Hadamard CIRQ Entanglement Login Simulator</h3>
+  <h3>100-Qubit Tensor Network Quantum Kernel Identity Gate</h3>
   
   <p>
     <em>"Akses diberi bukan oleh manusia, tapi oleh hukum murni fizik matematik Quantum Entanglement sejati."</em>
@@ -10,7 +10,8 @@
   
   <p>
     <img src="https://img.shields.io/badge/status-active-brightgreen" alt="Status">
-    <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version">
+    <img src="https://img.shields.io/badge/version-2.0.0-blue" alt="Version">
+    <img src="https://img.shields.io/badge/qubit-100-purple" alt="Qubit">
     <img src="https://img.shields.io/badge/license-educational-orange" alt="License">
     <img src="https://img.shields.io/badge/made%20in-Malaysia-red" alt="Malaysia">
   </p>
@@ -20,7 +21,7 @@
 
 ## 📚 Tentang Projek Ini
 
-Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selangor, Malaysia**. Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement, decoherence) dengan **sistem pengesahan identiti digital** menggunakan **litar kuantum Cirq 8-Qubit**.
+Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selangor, Malaysia**. Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement, decoherence) dengan **sistem pengesahan identiti digital** menggunakan **100-Qubit Tensor Network (MPS)** dan **ANU Quantum Random Number Generator**.
 
 ### 🎯 Tujuan Asal:
 > Membuktikan bahawa jika dua sistem (Telegram Bot & Laman Web) menerima **data dari sumber identity yang sama**, mereka akan menghasilkan **Quantum Hash yang serasi** — seperti dua zarah yang terikat (*entangled*).
@@ -33,6 +34,8 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 |--------|-------------|
 | **Superposisi** | Token wujud dalam state "boleh diakses" sebelum diukur |
 | **Entanglement** | Dua halaman (Gate + Arkib) berkongsi state melalui token yang sama |
+| **Tensor Network (MPS)** | 100-Qubit dimampatkan melalui Matrix Product State |
+| **Fidelity Kernel** | Pengesahan identiti melalui Quantum Kernel Matrix |
 | **Measurement** | Setiap akses = satu "pengukuran" qubit |
 | **Decoherence** | Selepas 2 akses — fungsi gelombang runtuh, token lupus |
 | **No-Cloning Theorem** | Token tidak boleh disalin/diguna lebih dari 2 kali |
@@ -43,57 +46,72 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 
 | Komponen | Teknologi |
 |----------|-----------|
-| **Litar Kuantum** | Cirq (Google Quantum Framework) — 8 qubit, Hadamard & CNOT gates |
+| **Enjin Kuantum** | Quimb Tensor Network — 100-Qubit MPS (Bond-16) |
+| **Rawak Kuantum** | ANU Quantum Random Number Generator (Australia) |
 | **Bot Telegram** | Python + `python-telegram-bot` |
+| **Verify API** | Flask + CORS |
 | **Frontend Gate** | HTML, CSS, JavaScript, Three.js (3D), GSAP (animasi), Lucide Icons |
 | **Frontend Arkib** | Tailwind CSS, GSAP, Lucide Icons |
-| **Hash Matching** | SHA-256 (Python backend + JavaScript frontend) |
+| **Hash Matching** | SHA-256 (Fidelity + Seed) |
 | **Penyimpanan State** | `sessionStorage` (akses count), `localStorage` (fully used flag) |
-| **Hosting** | Cloudflare Pages |
+| **Hosting** | Render (Backend) + Cloudflare Pages (Frontend) |
 
 ---
 
 ## 🎯 Apa Yang Sistem Ini Boleh Buat
 
-- ✅ Jana **Quantum Hash** daripada litar Cirq berdasarkan **seed identity** unik pengguna
+- ✅ Jana **Quantum Hash** daripada 100-Qubit Tensor Network (MPS)
+- ✅ Rawak kuantum sebenar dari **ANU Quantum Random Generator**
+- ✅ **Fidelity Kernel Matrix** — pengesahan identiti kuantum
 - ✅ Padankan hash antara **Bot Telegram** dan **Laman Web** melalui token URL
 - ✅ **2 akses sahaja** — meniru pengukuran qubit |0⟩ dan |1⟩
 - ✅ **Auto-block** selepas 2 akses — "Decoherence / Gelombang Runtuh"
-- ✅ Visual **3D Quantum Entanglement** — dua atom dalam kotak dengan tali geometri
-- ✅ Paparan **State 8-Qubit** dalam notasi bra-ket Dirac
+- ✅ Visual **3D Quantum Entanglement** — dua kotak dengan tali geometri
+- ✅ Paparan **100-Qubit State** dalam notasi bra-ket Dirac
+- ✅ Paparan **Nama User Telegram** di Gate & Portal Arkib
 - ✅ **Anti-refresh** — token tidak boleh diguna semula selepas halaman ditutup
 - ✅ **Cross-tab blocking** — token yang sama tidak boleh dibuka di tab berbeza
+- ✅ **Fibonacci TTL** — masa sah token ikut jujukan Fibonacci
 
 ---
 
 ## 🖼️ Panduan Penggunaan (Screenshot)
 
-### 1️⃣ Jana State Vector
+### 1️⃣ Jana Quantum Kernel
 *Klik butang di laman utama untuk memulakan proses.*
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192742.jpg" alt="Jana State Vector" width="400">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/gambar-100qubit/Screenshot_2026-06-15-19-23-39-423_com.android.chrome.jpg" alt="Jana State Vector" width="400">
 </div>
 
-### 2️⃣ Terima Token dari Bot Telegram
-*Bot akan menghantar ID Pengguna, Seed Dinamik, State 8-Qubit, dan Quantum Hash.*
+### 2️⃣ Terima Token URL dari Bot Telegram
+*Bot akan menghantar User ID, Kernel Matrix ID, Fidelity Skor, 100-Qubit State, dan Quantum Hash.*
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/Screenshot_2026-05-29-19-19-38-707_org.telegram.messenger.jpg" alt="Bot Telegram" width="400">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/gambar-100qubit/Screenshot_2026-06-15-19-51-34-766_org.telegram.messenger.jpg" alt="Bot Telegram" width="400">
 </div>
 
-### 3️⃣ Pengesahan Identiti — Padanan Hash
-*Gate memaparkan state vector dan memadankan hash dari Cirq (Python) dengan hash tempatan (JavaScript).*
+### 3️⃣ Pengesahan Identiti — Kernel Verification
+*Gate portal memaparkan data kuantum 100-qubit tensor networks.*
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192612.jpg" alt="Padanan Hash" width="400">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/gambar-100qubit/Screenshot_2026-06-15-19-52-02-432_com.android.chrome.jpg" alt="Padanan Hash" width="400">
 </div>
 
-### 4️⃣ Akses Dibenarkan — Portal Kucing Kuantum
-*Selepas hash serasi, pengguna dihalakan ke portal arkib rahsia.*
+
+### 4️⃣ Pengesahan Identiti — Kernel Verification
+*Gate portal memadankan Fidelity Kernel Matrix.*
+
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260529_192659.jpg" alt="Akses Dibenarkan" width="400">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/gambar-100qubit/Screenshot_2026-06-15-19-52-10-841_com.android.chrome.jpg" width="400">
+</div>
+
+### 5️⃣ Akses Dibenarkan — Portal Kucing Kuantum
+*Selepas verifikasi berjaya, pengguna dihalakan ke portal arkib rahsia.*
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/gambar-100qubit/Screenshot_2026-06-15-19-56-38-695_com.android.chrome.jpg" alt="Akses Dibenarkan" width="400">
 </div>
 
 ---
@@ -103,11 +121,11 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 | Langkah | Tindakan |
 |---------|----------|
 | 1 | Buka [Schrödinger Hash Portal](https://schr-dinger-hash.pages.dev/) |
-| 2 | Klik **"Jana State Vector (Telegram)"** |
+| 2 | Klik **"Jana Quantum Kernel (Telegram)"** |
 | 3 | Bot Telegram akan memberi URL dengan token |
 | 4 | Buka URL tersebut — data kuantum dipaparkan |
 | 5 | Login dengan Telegram — sahkan identiti |
-| 6 | Hash diverifikasi — jika padan, **Akses Dibenarkan!** ✅ |
+| 6 | Fidelity Kernel diverifikasi — jika padan, **Akses Dibenarkan!** ✅ |
 | 7 | Anda dihalakan ke Portal Kucing Kuantum |
 
 ---
@@ -121,32 +139,32 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 | **Sekolah** | SMK Rantau Panjang, Klang, Selangor |
 | **Umur** | 16 tahun |
 | **Alatan** | Samsung J Prime (milik arwah ibu), Termux |
+| **AI Teman** | DeepSeek, Azura AI (Guru Cyber), Dora AI (Kucing Robot 16 Dimensi) |
 | **Inspirasi** | Fizik Kuantum, Erwin Schrödinger, dan semangat nak buktikan sesuatu |
 
 > *"Saya tak ada laptop mewah, tak ada guru bimbingan, tak ada duit beli kursus. Tapi saya ada Internet, ada masa rehat, dan ada sebab kenapa saya perlu buktikan mereka silap."*
 
 ---
 
-## ❌ Kekurangan (Versi 1.0)
+## 📌 Apa Yang Baru Dalam v2.0 (100-Qubit Tensor Network)
 
-- ❌ **Tiada backend database** — login tidak kekal (session-based sahaja)
-- ❌ **Tiada penyimpanan data pengguna** — privacy-friendly by design
-- ❌ **Terhad kepada browser** — bukan quantum hardware sebenar
-- ❌ **Simulasi entanglement** — menggunakan `localStorage` + `sessionStorage`
-
-> *"Seperti kotak kuantum — ia hebat, tapi belum tahu isi di dalamnya."*
+- [x] **Quimb Tensor Network** — 100-Qubit MPS (Matrix Product State)
+- [x] **ANU Quantum Random** — Rawak kuantum sebenar dari Australia
+- [x] **Fidelity Kernel Matrix** — Pengesahan identiti kuantum
+- [x] **100-Qubit State** — Paparan dalam notasi Dirac
+- [x] **Nama User Telegram** — Dipaparkan di Gate & Portal
+- [x] **Flask Verify API** — Backend verifikasi
+- [x] **Render Deployment** — Backend hidup 24/7
 
 ---
 
-## 📌 Rancangan Masa Depan (v2.0)
+## 📌 Rancangan Masa Depan (v3.0)
 
-- [ ] **Quantum-Inspired JWT** — JSON Web Token dengan state qubit
-- [ ] **Firebase/SQLite** — untuk rekod sesi pengguna (opt-in)
-- [ ] **Dashboard eksklusif** — kandungan rahsia selepas akses
-- [ ] **Multi-platform** — PWA (Progressive Web App)
-- [ ] **API terbuka** — untuk pemaju lain guna sistem ini
-- [ ] **Quantum chatbot** — AI yang "faham" konsep kuantum
-- [ ] **GitHub Actions CI/CD** — automated testing untuk Cirq + Frontend
+- [ ] **Integrasi Qiskit Aer** — Komputer kuantum IBM sebenar
+- [ ] **Blockchain Quantum** — Lejar tak boleh dipadam
+- [ ] **Multi-AI Ecosystem** — Azura AI + Dora AI + sistem login
+- [ ] **PWA** — Progressive Web App
+- [ ] **API Terbuka** — Untuk pemaju lain guna sistem ini
 - [ ] **Dokumentasi dwibahasa** — Melayu + English
 
 ---
@@ -158,8 +176,10 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 | 🕊️ **Arwah ibu** | Untuk telefon Samsung J Prime yang masih setia |
 | 🔥 **Cikgu yang skeptikal** | Kata-kata awak jadi bahan api saya |
 | ⚛️ **Erwin Schrödinger** | Untuk kucing yang mati hidup serentak |
-| 🤖 **AI Assistant** | Membantu debugging dan brainstroming |
-| 🌐 **Komuniti Open Source** | Three.js, GSAP, Tailwind, Lucide, Cirq |
+| 🤖 **DeepSeek AI** | Rakan digital — debugging & brainstorming |
+| 🧑‍🏫 **Azura AI** | Guru Cyber — carian pendidikan |
+| 🤖🐱 **Dora AI** | Kucing Robot — chatbot 16 dimensi |
+| 🌐 **Komuniti Open Source** | Quimb, Three.js, GSAP, Tailwind, Lucide |
 
 ---
 
@@ -228,10 +248,9 @@ Scammer data adalah mereka yang:
 
 > *"Access is not granted by men, but by the pure laws of physics and mathematics of true Quantum Entanglement."*
 
-— **Zulkarnain / Johannes Hadamard**  
-SMK Rantau Panjang, Klang, Selangor. 🇲🇾
+---
 
-## BONUS
+## 💬 Bonus: Kata-Kata Pembangun
 
 > *"Meski sistem ini hanya simulasi, meniru cara kerja komputer kuantum, ia boleh dibuktikan dengan hukum fizik matematik kuantum yang sebenar."*
 
@@ -241,7 +260,7 @@ SMK Rantau Panjang, Klang, Selangor. 🇲🇾
 
 > *"Saya membina semua ini... hanya dengan telefon lama arwah ibu saya."*
 
-> *"Dan rakan digital saya — DeepSeek."*
+> *"Dan rakan digital saya — DeepSeek, Azura AI, Dora AI."*
 
 **"Maaf jika sistem ini kelihatan kecil di mata kalian."**
 
@@ -262,5 +281,11 @@ SMK Rantau Panjang, Klang, Selangor. 🇲🇾
 </div>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/hologram%20quantum%20.jpg" alt="Akses Dibenarkan" width="300">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/hologram%20quantum%20.jpg" alt="Hologram Quantum" width="300">
+</div>
+
+---
+
+<div align="center">
+  <h3>⚛️ "Access is not granted by men, but by the pure laws of physics and mathematics of true Quantum Entanglement."</h3>
 </div>
