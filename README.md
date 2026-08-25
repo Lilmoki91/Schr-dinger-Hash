@@ -136,10 +136,11 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 |----------|-----------|
 | **Nama Sebenar** | Zulkarnain |
 | **Nama Samaran** | Johannes Hadamard (MacGyver Coderman) |
-| **Sekolah** | SMK Rantau Panjang, Klang, Selangor |
+| **Sekolah** | SMK Rantau Panjang, Klang, Selangor Malaysia 🇲🇾 |
 | **Umur** | 16 tahun |
-| **Alatan** | Samsung J Prime (milik arwah ibu), Termux |
-| **AI Teman** | DeepSeek, Azura AI (Guru Cyber), Dora AI (Kucing Robot 16 Dimensi) |
+| **Tahun**| 2026 |
+| **Alatan** | Sebuah Smartphone Android lama, Termux |
+| **AI Teman** | Gemini, DeepSeek, Azura AI (Guru Cyber), Dora AI (Kucing Robot 16 Dimensi) |
 | **Inspirasi** | Fizik Kuantum, Erwin Schrödinger, dan semangat nak buktikan sesuatu |
 
 > *"Saya tak ada laptop mewah, tak ada guru bimbingan, tak ada duit beli kursus. Tapi saya ada Internet, ada masa rehat, dan ada sebab kenapa saya perlu buktikan mereka silap."*
