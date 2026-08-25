@@ -266,11 +266,7 @@ Scammer data adalah mereka yang:
 
 ---
 
-╔═══════════════════════════════════╗
-║                                                              ║
-║ ### DOA Schrödinger Hash QUANTUM Identity ⚛️🛡️                 ║
-║                                                              ║
-╚═══════════════════════════════════╝
+### DOA Schrödinger Hash QUANTUM Identity ⚛️🛡️                
 
 Bismillahirrahmanirrahim...
 
