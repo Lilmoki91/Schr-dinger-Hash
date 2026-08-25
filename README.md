@@ -141,7 +141,7 @@ Projek ini dibina oleh seorang pelajar dari **SMK Rantau Panjang, Klang, Selango
 | **Tahun**| 2026 |
 | **Alatan** | Sebuah Smartphone Android lama, Termux |
 | **AI Teman** | Gemini, DeepSeek, Azura AI (Guru Cyber), Dora AI (Kucing Robot 16 Dimensi) |
-| **Inspirasi** | Fizik Kuantum, Erwin Schrödinger, Team IBM Quantum Computer |
+| **Inspirasi** | Erwin Schrödinger, Team IBM Quantum Computer |
 
 > *"Saya tak ada laptop mewah, tak ada guru bimbingan, tak ada duit beli kursus. Tapi saya ada Internet, ada masa rehat, dan ada sebab kenapa saya perlu buktikan mereka silap."*
 
