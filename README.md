@@ -265,13 +265,13 @@ Scammer data adalah mereka yang:
 **"Maaf jika sistem ini kelihatan kecil di mata kalian."**
 
 ---
-```
+
 ╔═══════════════════════════════════╗
 ║                                                              ║
-║ DOA Schrödinger Hash QUANTUM Identity ⚛️🛡️                 ║
+║ ### DOA Schrödinger Hash QUANTUM Identity ⚛️🛡️                 ║
 ║                                                              ║
 ╚═══════════════════════════════════╝
-```
+
 Bismillahirrahmanirrahim...
 
 "Dengan nama Allah, Yang Maha Pemurah, Yang Maha Penyayang."
