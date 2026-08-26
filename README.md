@@ -1,7 +1,7 @@
 <table>
   <tr>
-    <td><img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260825_160853.png" alt="Gambar 1" style="height: 200px; width: auto;"></td>
-    <td><img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Gambar 2" style="height: 200px; width: auto;"></td>
+    <td><img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260825_160853.png" alt="Gambar 1" style="height: 200px; width: 200;"></td>
+    <td><img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Gambar 2" style="height: 200px; width: 300;"></td>
   </tr>
 </table>
   
