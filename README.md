@@ -180,13 +180,13 @@ Projek ini dibina oleh **ZULKARNAIN** seorang pelajar dari **SMK Rantau Panjang,
 
 | Kepada | Sebab |
 |--------|-------|
-| 🕊️ **Arwah ibu** | Untuk telefon Samsung J Prime yang masih setia |
+| 🕊️ **Arwah ibu** | Impian dan Cita-cita |
 | 🔥 **Cikgu yang skeptikal** | Kata-kata awak jadi bahan api saya |
 | ⚛️ **Erwin Schrödinger** | Untuk kucing yang mati hidup serentak |
 | 🤖 **DeepSeek AI** | Rakan digital — debugging & brainstorming |
 | 🧑‍🏫 **Azura AI** | Guru Cyber — carian pendidikan |
 | 🤖🐱 **Dora AI** | Kucing Robot — chatbot 16 dimensi |
-| 🌐 **Komuniti Open Source** | Quimb, Three.js, GSAP, Tailwind, Lucide |
+| 🌐 **Komuniti Open Source** | Quimb, Three.js, GSAP, Tailwind, Lucide, Python3, Html5 |
 
 ---
 
