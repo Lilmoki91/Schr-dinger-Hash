@@ -1,8 +1,11 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260825_160853.png" alt="Schrödinger Hash - Kucing Kuantum" width="200">
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="300">
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+  <div>
+    <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260825_160853.png" alt="Schrödinger Hash - Gambar 1" width="200">
+  </div>
+  <div>
+    <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="300">
+  </div>
+</div>
   
   <h1>⚛️ Schrödinger Hash</h1>
   <h3>100-Qubit Tensor Network Quantum Kernel Identity Gate</h3>
