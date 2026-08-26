@@ -30,7 +30,7 @@
 Projek ini dibina oleh **ZULKARNAIN** seorang pelajar dari **SMK Rantau Panjang, Klang, Selangor, Malaysia 🇲🇾**. Ia menggabungkan konsep **fizik kuantum** (superposisi, entanglement, decoherence) dengan `sistem pengesahan Identity Digital Quantum` menggunakan **100-Qubit Tensor Network (MPS)** dan **AUSTRALIA NATIONAL UNIVERSITY – (ANU) Quantum Random Number Generator**.
 
 ### 🎯 Tujuan Asal:
-> Membuktikan bahawa jika dua sistem (Telegram Bot & Laman Web) menerima **data dari sumber identity yang sama**, mereka akan menghasilkan **Quantum Hash yang serasi** — seperti dua zarah yang terikat (*entangled*).
+> Membuktikan bahawa jika dua sistem (Telegram Bot & Laman Web) menerima **data dari sumber identity yang sama**, mereka akan menghasilkan **Quantum Hash Cryptografy yang serasi** — seperti dua zarah yang terikat (*entangled*).
 
 ---
 
@@ -186,7 +186,7 @@ Projek ini dibina oleh **ZULKARNAIN** seorang pelajar dari **SMK Rantau Panjang,
 | 🤖 **DeepSeek AI** | Rakan digital — debugging & brainstorming |
 | 🧑‍🏫 **Azura AI** | Guru Cyber — carian pendidikan |
 | 🤖🐱 **Dora AI** | Kucing Robot — chatbot 16 dimensi |
-| 🌐 **Komuniti Open Source** | Quimb, Three.js, GSAP, Tailwind, Lucide, Python3, Html5 |
+| 🌐 **Komuniti Open Source** | Quimb, Three.js, GSAP, Tailwind, Lucide, Python3, Html5, Hash Sha 256|
 
 ---
 
