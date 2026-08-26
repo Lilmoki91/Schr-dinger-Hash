@@ -338,7 +338,7 @@ Amin Ya Rabbal Alamin. 🤲✨
 </div>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/hologram%20quantum%20.jpg" alt="Hologram Quantum" width="300">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260826_103624.jpg" alt="Hologram Quantum" width="300">
 </div>
 
 ---
