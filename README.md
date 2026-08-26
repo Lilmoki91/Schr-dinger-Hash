@@ -18,7 +18,7 @@
     <img src="https://img.shields.io/badge/qubit-100-purple" alt="Qubit">
     <img src="https://img.shields.io/badge/license-educational-orange" alt="License">
     <img src="https://img.shields.io/badge/made%20in-Malaysia-red" alt="Malaysia">
-    <img src="https://img.shields.io/badge/Quantum%20identity20digital-green" alt="Malaysia">
+    <img src="https://img.shields.io/badge/System-green" alt="Quantum Identity Digital">
   </p>
 </div>
 
