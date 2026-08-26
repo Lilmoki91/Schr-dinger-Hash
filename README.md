@@ -19,7 +19,7 @@
     <img src="https://img.shields.io/badge/license-educational-orange" alt="License">
     <img src="https://img.shields.io/badge/made%20in-Malaysia-red" alt="Malaysia">
     <img src="https://img.shields.io/badge/System-Quantum%20ID-green" alt="Quantum-ID">
-    <img src="https://img.shields.io/badge/Quantum-Cryptography-blue" alt="Quantum Cryptography">
+    <img src="https://img.shields.io/badge/Program-Quantum%20Cryptografy-blue" alt="Quantum Cryptografy">
   </p>
 </div>
 
