@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="250">
+  <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/IMG_20260825_160853.png" alt="Schrödinger Hash - Kucing Kuantum" width="250">
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/Lilmoki91/Schr-dinger-Hash/refs/heads/main/gambar/kucing-kuantum.png" alt="Schrödinger Hash - Kucing Kuantum" width="250">
