@@ -265,9 +265,9 @@ Scammer data adalah mereka yang:
 
 ### "Terima kasih, Tuan-Tuan dan Puan-Puan yang mulia."
 
-> *"Saya membina semua ini... hanya dengan telefon lama arwah ibu saya."*
+> *"Saya membina semua ini... hanya dengan telefon lama dan semangat arwah ibu saya."*
 
-> *"Dan rakan digital saya — DeepSeek, Azura AI, Dora AI."*
+> *"Dan rakan digital saya — Gemini Ai, DeepSeek Ai, Azura AI, Dora AI."*
 
 **"Maaf jika sistem ini kelihatan kecil di mata kalian."**
 
